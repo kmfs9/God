@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Military / Tactical Styling with Embossed Gold Accents
+# Custom Military / Tactical Styling with Embossed Gold Accents & Fixed Tab Text Colors
 st.markdown("""
 <style>
     /* Main Background & Text */
@@ -68,7 +68,7 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* Tabs Styling */
+    /* Tabs Styling with Fixed Text Color Visibility */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: #121813;
@@ -82,8 +82,12 @@ st.markdown("""
         background-color: #1c261e;
         border: 1px solid #3d4f3f;
         border-radius: 4px 4px 0px 0px;
-        color: #c0cac1;
+        color: #f0e68c !important;
         font-weight: bold;
+    }
+
+    .stTabs [data-baseweb="tab"] p {
+        color: #f0e68c !important;
     }
 
     .stTabs [aria-selected="true"] {
@@ -92,6 +96,10 @@ st.markdown("""
         border-bottom: none !important;
         color: #D4AF37 !important;
         text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    }
+
+    .stTabs [aria-selected="true"] p {
+        color: #D4AF37 !important;
     }
 
     /* Input Controls Customization */
@@ -180,12 +188,12 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 4. MAIN BODY HEADER: DIVINE COMMANDING OFFICER & C4ISR
+# 4. MAIN BODY HEADER: DIVINE COMMANDING OFFICER & C4ISR (CROPPED KRISHNA LOGO)
 # ==============================================================================
 st.markdown("""
 <div class="gold-card" style="text-align: center; margin-bottom: 25px;">
     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-        <svg width="140" height="140" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <svg width="140" height="140" viewBox="25 5 50 90" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <radialGradient id="divineGlow" cx="50%" cy="50%" r="50%">
                     <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.8"/>
@@ -499,7 +507,7 @@ with tab4:
     """, unsafe_allow_html=True)
 
     # Download Button for Briefing Text
-    brief_text = f"""TOP SECRET BRIEFING MEMORANDUM FOR THE GOC
+    brief_text = f"""TOP SECRET BRIEFING MEMORANDUM FORTHE GOC
 SUBJECT: Universal Elemental Doctrine - {st.session_state.op_name}
 DATE: {brief_date}
 SECTOR: {st.session_state.target_sector}
