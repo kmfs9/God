@@ -121,6 +121,17 @@ st.markdown("""
         -webkit-text-fill-color: #ffffff !important;
     }
 
+    /* Target the inner container elements and placeholders directly */
+    input, textarea, div[data-baseweb="base-input"] input, div[data-baseweb="base-input"] textarea {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }
+    
+    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
+        color: #8a9a8c !important;
+        -webkit-text-fill-color: #8a9a8c !important;
+    }
+
     .stSelectbox>div>div>div {
         background-color: #121813 !important;
         color: #ffffff !important;
@@ -289,7 +300,7 @@ with tab1:
                 <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 DIVINE ELEMENTAL ANALYSIS & RECON PLAN:</div>
                 <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab1}"</p>
                 <ul>
-                    <li><b>Sun/Sky ISR Layer:</b> Unblinking optical & SIGINT baseline established over sector <b>{st.session_state.target_sector}</b>[cite: 16].</li>
+                    <li><b>Sun/Sky ISR Layer:</b> Unblinking optical & SIGINT baseline established over sector <b>{st.session_state.target_sector}</b>.</li>
                     <li><b>Air Acoustic Vector:</b> Passive acoustic listening posts deployed to intercept adversary communications without emitting counter-signatures.</li>
                     <li><b>Reconnaissance Outcome:</b> Complete invisibility achieved by mapping natural environmental frequencies.</li>
                 </ul>
@@ -357,7 +368,7 @@ with tab1:
         if st.button("Generate Elemental Invincibility Analysis", key="btn_recon_sim"):
             st.success("Elemental Mapping Generated:")
             st.markdown(f"""
-            - 🌊 **River Pathing:** Infiltrate via drainage channels in sector **{st.session_state.target_sector}**[cite: 16].
+            - 🌊 **River Pathing:** Infiltrate via drainage channels in sector **{st.session_state.target_sector}**.
             - 💨 **Air Masking:** Synchronize movement with ambient acoustic noise during **{op_environment}** atmospheric shifts.
             - ⛰️ **Earth/Mountain Armor:** Establish hide sites inside static subterranean geographic pockets.
             """)
