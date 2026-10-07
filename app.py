@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Military / Tactical Styling with Embossed Gold Accents & Overt Gold Tabs
+# Custom Military / Tactical Styling with Embossed Gold Accents & Always-Visible Gold Tabs
 st.markdown("""
 <style>
     /* Main Background & Text */
@@ -70,11 +70,11 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* Overt Gold Tabs Styling (Fully Visible Without Hover or Touch) */
+    /* Overt Gold Tabs Styling - Always Visible, High Contrast (No Hover/Touch Required) */
     .stTabs [data-baseweb="tab-list"] {
         gap: 6px;
-        background-color: #161e17;
-        border: 2px solid #D4AF37;
+        background-color: #161e17 !important;
+        border: 2px solid #D4AF37 !important;
         border-radius: 6px 6px 0px 0px;
         padding: 8px;
         overflow-x: auto;
@@ -92,9 +92,10 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    .stTabs [data-baseweb="tab"] p {
+    .stTabs [data-baseweb="tab"] span, .stTabs [data-baseweb="tab"] p {
         color: #D4AF37 !important;
         font-weight: bold !important;
+        opacity: 1 !important;
     }
 
     .stTabs [aria-selected="true"] {
@@ -106,12 +107,26 @@ st.markdown("""
         box-shadow: 0 -2px 10px rgba(212, 175, 55, 0.4);
     }
 
-    .stTabs [aria-selected="true"] p {
+    .stTabs [aria-selected="true"] span, .stTabs [aria-selected="true"] p {
         color: #ffffff !important;
     }
 
-    /* Input Controls Customization */
-    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
+    /* Fixed Input Controls: Dark background with visible Gold text */
+    .stTextInput>div>div>input {
+        background-color: #161e17 !important;
+        color: #D4AF37 !important;
+        border: 1px solid #D4AF37 !important;
+        -webkit-text-fill-color: #D4AF37 !important;
+    }
+    
+    .stTextArea>div>div>textarea {
+        background-color: #161e17 !important;
+        color: #D4AF37 !important;
+        border: 1px solid #D4AF37 !important;
+        -webkit-text-fill-color: #D4AF37 !important;
+    }
+
+    .stSelectbox>div>div>div {
         background-color: #161e17 !important;
         color: #D4AF37 !important;
         border: 1px solid #D4AF37 !important;
@@ -135,7 +150,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. SESSION STATE INITIALIZATION FOR COMMANDER'S BRIEF SYNTHESIS
+# 2. SESSION STATE INITIALIZATION
 # ==============================================================================
 if 'op_name' not in st.session_state:
     st.session_state.op_name = "OPERATION TRISHUL DHARMA"
@@ -149,6 +164,14 @@ if 'detected_bos' not in st.session_state:
     st.session_state.detected_bos = ["Adversary C2 Radio Relays", "Early Warning Radar Node"]
 if 'ingress_window' not in st.session_state:
     st.session_state.ingress_window = "0200 - 0430 hrs (Low Thermal / Fog Cover)"
+
+# User Query Box States for Tabs 1, 2, and 3 (Left blank by default as requested)
+if 'query_tab1' not in st.session_state:
+    st.session_state.query_tab1 = ""
+if 'query_tab2' not in st.session_state:
+    st.session_state.query_tab2 = ""
+if 'query_tab3' not in st.session_state:
+    st.session_state.query_tab3 = ""
 
 # ==============================================================================
 # 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX
@@ -196,7 +219,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 4. MAIN BODY HEADER: DIVINE COMMANDING OFFICER & C4ISR (IMAGE REFLECTED)
+# 4. MAIN BODY HEADER: DIVINE COMMANDING OFFICER & C4ISR
 # ==============================================================================
 st.markdown("""
 <div class="gold-card" style="text-align: center; margin-bottom: 25px;">
@@ -223,7 +246,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Create 4 Overt Gold Tabs (Fully Visible and Legible Without Touching)
+# Create 4 Overt Gold Tabs (Always visible, high contrast text)
 tab1, tab2, tab3, tab4 = st.tabs([
     "🌐 TAB 1: 5D TACTICAL MATRIX",
     "🛡️ TAB 2: REVERSE 5D & BOS",
@@ -237,6 +260,34 @@ tab1, tab2, tab3, tab4 = st.tabs([
 with tab1:
     st.markdown("### MODULE 1: THE ELEMENTAL 5D STRATEGY (DETECT, DETER, DENY, DELIVER, DESTROY)")
     st.write("Nature provides the ultimate unstoppable reconnaissance and surveillance architecture. The enemy cannot detect, deter, deny, deliver, or destroy the Sun, the River, the Wind, or the Earth. XXSFX-A operators map these natural behaviors to become invincible, fluid, and undetectable.")
+
+    # Query Box for Tab 1 (Blank by default, clearly typed)
+    st.markdown("""
+    <div class="gold-card" style="border: 2px dashed #D4AF37;">
+        <div class="gold-card-title">TAB 1 INTELLIGENCE QUERY & LOGIC ANALYSIS CONSOLE</div>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific recon/surveillance parameters, infiltration requirements, or divine elemental focus for Tab 1:</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.session_state.query_tab1 = st.text_area(
+        "Enter Tab 1 Recon & Surveillance Query:",
+        value=st.session_state.query_tab1,
+        placeholder="Type custom reconnaissance directives, sensor deployment plans, or baseline anomaly criteria here...",
+        key="t1_input"
+    )
+
+    if st.session_state.query_tab1.strip():
+        st.markdown(f"""
+        <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF;">
+            <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 DIVINE ELEMENTAL ANALYSIS & RECON PLAN:</div>
+            <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab1}"</p>
+            <ul>
+                <li><b>Sun/Sky ISR Layer:</b> Unblinking optical & SIGINT baseline established over sector <b>{st.session_state.target_sector}</b>.</li>
+                <li><b>Air Acoustic Vector:</b> Passive acoustic listening posts deployed to intercept adversary communications without emitting counter-signatures.</li>
+                <li><b>Reconnaissance Outcome:</b> Complete invisibility achieved by mapping natural environmental frequencies.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 1])
 
@@ -312,6 +363,33 @@ with tab1:
 with tab2:
     st.markdown("### MODULE 2: REVERSE 5D ADVERSARY COUNTER-MATRIX & HIDDEN BATTLE OPERATING SYSTEMS (BOS)")
     st.write("To defeat the adversary inside our borders or across hostile lines, XXSFX-A must map the enemy's Battle Operating Systems (BOS)—both visible and hidden—while deploying the Reverse 5D Counter-Matrix.")
+
+    # Query Box for Tab 2 (Blank by default, clearly typed)
+    st.markdown("""
+    <div class="gold-card" style="border: 2px dashed #D4AF37;">
+        <div class="gold-card-title">TAB 2 REVERSE 5D & BOS DETECTOR QUERY CONSOLE</div>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific adversary BOS target, counter-detection requirement, or cross-border penetration challenge for Tab 2:</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.session_state.query_tab2 = st.text_area(
+        "Enter Tab 2 Reverse 5D & BOS Query:",
+        value=st.session_state.query_tab2,
+        placeholder="Type adversary radar/C2 targets, counter-surveillance parameters, or covert ingress criteria here...",
+        key="t2_input"
+    )
+
+    if st.session_state.query_tab2.strip():
+        st.markdown(f"""
+        <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF;">
+            <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 REVERSE 5D & BOS ANALYSIS:</div>
+            <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab2}"</p>
+            <ul>
+                <li><b>Reverse Detect Matrix:</b> Subterranean earth cloaking active against adversary active sensors.</li>
+                <li><b>BOS Neutralization:</b> Adversary command nodes identified for water-fluid bypass and lightning strike.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
     col_a, col_b = st.columns([1, 1])
 
@@ -397,6 +475,33 @@ with tab3:
     st.markdown("### MODULE 3: THE FIRE PARALLEL — ANATOMY OF THE ELITE XXSFX-A OPERATOR")
     st.write("Fire creates immense light and heat through the deliberate, controlled consumption of its own body. An elite XXSFX-A operator burns their physical reserves, youth, and comfort to illuminate the dark and project force for the nation.")
 
+    # Query Box for Tab 3 (Blank by default, clearly typed)
+    st.markdown("""
+    <div class="gold-card" style="border: 2px dashed #D4AF37;">
+        <div class="gold-card-title">TAB 3 SF OPERATIONAL & EXFILTRATION QUERY CONSOLE</div>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific SF operator tradecraft, human terrain integration, or exfiltration criteria for Tab 3:</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.session_state.query_tab3 = st.text_area(
+        "Enter Tab 3 SF Operational Query:",
+        value=st.session_state.query_tab3,
+        placeholder="Type cross-border exfiltration, human terrain alignment, or operator self-consumption parameters here...",
+        key="t3_input"
+    )
+
+    if st.session_state.query_tab3.strip():
+        st.markdown(f"""
+        <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF;">
+            <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 SF OPERATIONAL & EXFILTRATION ANALYSIS:</div>
+            <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab3}"</p>
+            <ul>
+                <li><b>Human Terrain Integration:</b> Team merges seamlessly with civilian mobility corridors.</li>
+                <li><b>Exfiltration Protocol:</b> Zero-friction egress via drainage networks and stealth extraction windows.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
     st.markdown("""
     <div class="gold-card">
         <div class="gold-card-title">THE 360-DEGREE FIRE PARALLEL FOR XXSFX-A</div>
@@ -450,78 +555,109 @@ with tab3:
         """, unsafe_allow_html=True)
 
 # ==============================================================================
-# TAB 4: COMMANDER-IN-CHIEF EXECUTIVE STRATEGIC BRIEFING
+# TAB 4: COMMANDER-IN-CHIEF EXECUTIVE STRATEGIC BRIEFING & LIVE QUERY FEED
 # ==============================================================================
 with tab4:
-    st.markdown("### MODULE 4: EXECUTIVE STRATEGIC BRIEFING FOR GENERAL OFFICER COMMANDING (GOC)")
-    st.write("This tab automatically aggregates inputs, selections, scenario analyses, and elemental mappings from Tabs 1, 2, and 3 into an executive military memorandum.")
+    st.markdown("### MODULE 4: EXECUTIVE STRATEGIC BRIEFING & SEALED INTELLIGENCE SUMMARY")
+    st.write("This tab aggregates all inputs, selections, scenario analyses, and live queries from Tabs 1, 2, and 3 into a sealed, complete intelligence and divine battlefield summary for the GOC.")
 
-    # Executive Brief Container
-    brief_date = datetime.now().strftime("%Y-%m-%d %H:%M IST")
-    
-    st.markdown(f"""
-    <div class="gold-card" style="background-color: #0e140f; border: 2px solid #D4AF37;">
-        <div style="text-align: center; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 15px;">
-            <h2 style="margin:0; font-size: 1.5rem; color:#D4AF37;">CONFIDENTIAL / OPERATIONAL EYES ONLY</h2>
-            <h3 style="margin:5px 0; font-size: 1.1rem; color:#e0e6e1;">TOP SECRET BRIEFING MEMORANDUM FOR THE GOC</h3>
-            <span style="color:#8a9a8c; font-size:0.8rem;">DATE/TIME OF SYNTHESIS: {brief_date} | LOCATION: HQ SPECIAL OPERATIONS</span>
-        </div>
-        
-        <p><b>1. SUBJECT:</b> Operational Application of Universal Elemental Doctrine to {st.session_state.op_name}.</p>
-        
-        <p><b>2. TARGET SECTOR:</b> <span style="color:#D4AF37;">{st.session_state.target_sector}</span> ({op_environment} | Threat: {threat_level})</p>
-        
-        <p><b>3. DEPLOYED NATURAL RECON & SURVEILLANCE AGENTS:</b></p>
-        <ul>
-            {"".join([f"<li><b>{elem}</b></li>" for elem in st.session_state.selected_elements])}
-        </ul>
-        
-        <p><b>4. 5D & REVERSE 5D TACTICAL SYNTHESIS:</b></p>
-        <ul>
-            <li><b>Detect / Counter-Detect:</b> Employing Sun/Sky overhead baseline tracking paired with Earth-based subterranean thermal cloaking to maintain zero footprint.</li>
-            <li><b>Deter / Counter-Deter:</b> Utilizing Mountain geographic bottlenecks to force adversary movement into predetermined engagement zones while bypassing enemy bastions as Water.</li>
-            <li><b>Deny / Counter-Deny:</b> Exploiting Air acoustic/SIGINT channels while denying target acquisition to adversary counter-surveillance assets.</li>
-            <li><b>Deliver & Destroy:</b> Infiltrating deep via River corridors during the optimal window (<b>{st.session_state.ingress_window}</b>) to deliver Fire/Lightning decapitation strikes on critical adversary BOS nodes.</li>
-        </ul>
-        
-        <p><b>5. TARGETED ADVERSARY HIDDEN BATTLE OPERATING SYSTEMS (BOS):</b></p>
-        <ul>
-            {"".join([f"<li><b>Target BOS:</b> {bos}</li>" for bos in st.session_state.detected_bos])}
-        </ul>
-        
-        <p><b>6. OPERATIONAL PATROL SCENARIO:</b></p>
-        <p style="font-style: italic; color:#c0cac1; background: #161e17; padding: 10px; border-left: 3px solid #D4AF37;">
-            "{st.session_state.recon_scenario}"
-        </p>
-        
-        <p><b>7. COMMANDER'S CONCLUSION:</b></p>
-        <p style="font-size: 0.9rem;">
-            The XXSFX-A detachment operating under this doctrine acts with the invisibility of the Wind, the persistence of the Sun, the fluid stealth of the River, and the lethal precision of Lightning. By consuming their physical reserves (The Wick), operators illuminate the operational dark, uncover hidden adversary BOS, and execute cross-border missions with absolute invincibility and zero compromise.
-        </p>
-        
-        <div style="margin-top:20px; border-top: 1px solid #D4AF37; padding-top: 10px; text-align: right; font-size:0.80rem; color:#8a9a8c;">
-            <b>BY ORDER OF COMMAND:</b> XXSFX-A STRATEGIC CELL (KOLKATA GENESIS)
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    # Check if the first three boxes have been filled
+    t1_filled = bool(st.session_state.query_tab1.strip())
+    t2_filled = bool(st.session_state.query_tab2.strip())
+    t3_filled = bool(st.session_state.query_tab3.strip())
 
-    # Download Button for Briefing Text
-    brief_text = f"""TOP SECRET BRIEFING MEMORANDUM FOR THE GOC
-SUBJECT: Universal Elemental Doctrine - {st.session_state.op_name}
-DATE: {brief_date}
+    if not (t1_filled and t2_filled and t3_filled):
+        st.markdown("""
+        <div class="gold-card" style="border: 2px solid #D4AF37; text-align: center; background: #161e17; padding: 30px;">
+            <h3 style="color: #D4AF37; margin-top:0;">🔒 SEALED BRIEFING Awaiting Prior Inputs</h3>
+            <p style="color: #e0e6e1; font-size: 1.05rem;">
+                The GOC Executive Summary and Sealed Intelligence Brief remain locked until <b>all three query boxes</b> in Tabs 1, 2, and 3 are filled with operational directives.
+            </p>
+            <p style="color: #00E5FF; font-size: 0.9rem;">
+                <b>Current Status:</b><br>
+                • Tab 1 Query: {}<br>
+                • Tab 2 Query: {}<br>
+                • Tab 3 Query: {}
+            </p>
+        </div>
+        """.format(
+            "✅ Provided" if t1_filled else "❌ Pending (Blank)",
+            "✅ Provided" if t2_filled else "❌ Pending (Blank)",
+            "✅ Provided" if t3_filled else "❌ Pending (Blank)"
+        ), unsafe_allow_html=True)
+    else:
+        brief_date = datetime.now().strftime("%Y-%m-%d %H:%M IST")
+        
+        st.markdown(f"""
+        <div class="gold-card" style="background-color: #0e140f; border: 2px solid #D4AF37;">
+            <div style="text-align: center; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 15px;">
+                <h2 style="margin:0; font-size: 1.5rem; color:#D4AF37;">CONFIDENTIAL / SEALED INTELLIGENCE SUMMARY</h2>
+                <h3 style="margin:5px 0; font-size: 1.1rem; color:#e0e6e1;">TOP SECRET DIVINE BATTLEFIELD MEMORANDUM FOR THE GOC</h3>
+                <span style="color:#8a9a8c; font-size:0.8rem;">DATE/TIME OF SYNTHESIS: {brief_date} | LOCATION: HQ SPECIAL OPERATIONS (KOLKATA GENESIS)</span>
+            </div>
+            
+            <p><b>1. SUBJECT:</b> Sealed Master Intelligence Summary & Cross-Border Operational Synthesis for {st.session_state.op_name}.</p>
+            
+            <p><b>2. TARGET SECTOR & ENVIRONMENT:</b> <span style="color:#D4AF37;">{st.session_state.target_sector}</span> ({op_environment} | Threat: {threat_level})</p>
+            
+            <p><b>3. AGGREGATED LIVE QUERIES FROM TABS 1, 2, & 3:</b></p>
+            <ul>
+                <li><b>Tab 1 (Recon & Surveillance Directive):</b> "{st.session_state.query_tab1}"</li>
+                <li><b>Tab 2 (Reverse 5D & BOS Directive):</b> "{st.session_state.query_tab2}"</li>
+                <li><b>Tab 3 (SF Operational & Exfiltration Directive):</b> "{st.session_state.query_tab3}"</li>
+            </ul>
+            
+            <p><b>4. DEPLOYED NATURAL RECON & SURVEILLANCE AGENTS:</b></p>
+            <ul>
+                {"".join([f"<li><b>{elem}</b></li>" for elem in st.session_state.selected_elements])}
+            </ul>
+            
+            <p><b>5. 5D & REVERSE 5D TACTICAL SYNTHESIS:</b></p>
+            <ul>
+                <li><b>Detect / Counter-Detect:</b> Employing Sun/Sky overhead baseline tracking paired with Earth-based subterranean thermal cloaking.</li>
+                <li><b>Deter / Counter-Deter:</b> Utilizing Mountain geographic bottlenecks to channel adversary movement while bypassing enemy bastions as Water.</li>
+                <li><b>Deny / Counter-Deny:</b> Exploiting Air acoustic/SIGINT channels while blinding adversary counter-surveillance assets.</li>
+                <li><b>Deliver & Destroy:</b> Infiltrating deep via River corridors during window <b>{st.session_state.ingress_window}</b> for Fire/Lightning decapitation strikes on targeted adversary BOS nodes (<b>{', '.join(st.session_state.detected_bos)}</b>).</li>
+            </ul>
+            
+            <p><b>6. COMPLETE INGRESS, EGRESS & EXFILTRATION PROTOCOL:</b></p>
+            <p style="background: #161e17; padding: 10px; border-left: 3px solid #00E5FF; font-size: 0.9rem;">
+                <b>Ingress:</b> Zero-footprint subterranean earth masking combined with river drainage lines.<br>
+                <b>Execution:</b> Decisive lightning strike on enemy C2/ISR nodes.<br>
+                <b>Egress & Exfiltration:</b> Silent dissolution through civilian human terrain and atmospheric acoustic masking, leaving zero residue.
+            </p>
+            
+            <p><b>7. DIVINE BATTLEFIELD COMMANDER'S CONCLUSION:</b></p>
+            <p style="font-size: 0.9rem;">
+                The XXSFX-A detachment operates as an unyielding manifestation of natural law. By fusing live tactical directives from all three operational sectors, the force achieves absolute operational invisibility, total adversary BOS paralysis, and seamless exfiltration.
+            </p>
+            
+            <div style="margin-top:20px; border-top: 1px solid #D4AF37; padding-top: 10px; text-align: right; font-size:0.80rem; color:#8a9a8c;">
+                <b>AUTHENTICATED BY:</b> XXSFX-A SUPREME COMMAND CELL
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        brief_text = f"""TOP SECRET SEALED INTELLIGENCE SUMMARY FOR THE GOC
+OPERATION: {st.session_state.op_name}
 SECTOR: {st.session_state.target_sector}
+DATE: {brief_date}
 
-1. DEPLOYED ELEMENTS: {', '.join(st.session_state.selected_elements)}
-2. TARGET BOS: {', '.join(st.session_state.detected_bos)}
-3. INGRESS/EGRESS WINDOW: {st.session_state.ingress_window}
-4. SCENARIO: {st.session_state.recon_scenario}
+LIVE OPERATIONAL DIRECTIVES:
+- Tab 1 Recon Query: {st.session_state.query_tab1}
+- Tab 2 BOS Query: {st.session_state.query_tab2}
+- Tab 3 SF/Exfil Query: {st.session_state.query_tab3}
 
-EXECUTIVE SUMMARY:
-XXSFX-A teams executing 5D & Reverse 5D framework map immutable natural laws to remain undetectable, undeniable, and undestructible across border corridors.
+ELEMENTAL AGENTS: {', '.join(st.session_state.selected_elements)}
+TARGET BOS: {', '.join(st.session_state.detected_bos)}
+INGRESS/EGRESS WINDOW: {st.session_state.ingress_window}
+
+SUMMARY:
+Complete divine battlefield synthesis successfully generated. All ingress, egress, and reverse 5D protocols locked and verified.
 """
-    st.download_button(
-        label="📄 Download GOC Executive Briefing (.txt)",
-        data=brief_text,
-        file_name=f"GOC_Briefing_{st.session_state.op_name.replace(' ', '_')}.txt",
-        mime="text/plain"
-    )
+        st.download_button(
+            label="📄 Download Sealed GOC Intelligence Summary (.txt)",
+            data=brief_text,
+            file_name=f"Sealed_GOC_Intelligence_Summary_{st.session_state.op_name.replace(' ', '_')}.txt",
+            mime="text/plain"
+        )
