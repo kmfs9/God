@@ -4,6 +4,7 @@ import numpy as np
 from datetime import datetime
 from PIL import Image
 import os
+from openai import OpenAI
 
 # ==============================================================================
 # 1. PAGE CONFIGURATION & MILITARY GOLDEN THEME (CUSTOM CSS)
@@ -187,7 +188,43 @@ if 'query_tab3' not in st.session_state:
     st.session_state.query_tab3 = ""
 
 # ==============================================================================
-# 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX
+# GROK / XAI API HELPER FUNCTION (USING openai/gpt-oss-120b)
+# ==============================================================================
+GROK_MODEL = "openai/gpt-oss-120b"
+
+def run_grok_intelligence(system_instruction: str, prompt_text: str):
+    """Retrieves secret GROK_API_KEY from Streamlit secrets and calls xAI API."""
+    api_key = st.secrets.get("GROK_API_KEY", st.secrets.get("XAI_API_KEY", None))
+    
+    if not api_key:
+        return None, (
+            "⚠️ **GROK_API_KEY Missing in Streamlit Secrets.**\n\n"
+            "To enable live Grok AI analysis, save your key in `.streamlit/secrets.toml` or Streamlit Cloud Secrets:\n"
+            "```toml\n"
+            "GROK_API_KEY = \"xai-your-api-key-here\"\n"
+            "```"
+        )
+    
+    try:
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.x.ai/v1"
+        )
+        response = client.chat.completions.create(
+            model=GROK_MODEL,
+            messages=[
+                {"role": "system", "content": system_instruction},
+                {"role": "user", "content": prompt_text}
+            ],
+            temperature=0.7,
+            max_tokens=1000
+        )
+        return response.choices[0].message.content, None
+    except Exception as e:
+        return None, f"⚠️ **Grok API Execution Error:** {str(e)}"
+
+# ==============================================================================
+# 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX (UNTOUCHED)
 # ==============================================================================
 with st.sidebar:
     st.markdown("""
@@ -295,17 +332,22 @@ with tab1:
 
     if tab1_submitted or st.session_state.query_tab1.strip():
         if st.session_state.query_tab1.strip():
-            st.markdown(f"""
-            <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 DIVINE ELEMENTAL ANALYSIS & RECON PLAN:</div>
-                <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab1}"</p>
-                <ul>
-                    <li><b>Sun/Sky ISR Layer:</b> Unblinking optical & SIGINT baseline established over sector <b>{st.session_state.target_sector}</b>.</li>
-                    <li><b>Air Acoustic Vector:</b> Passive acoustic listening posts deployed to intercept adversary communications without emitting counter-signatures.</li>
-                    <li><b>Reconnaissance Outcome:</b> Complete invisibility achieved by mapping natural environmental frequencies.</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            with st.spinner(f"⚡ Processing directive via Grok API ({GROK_MODEL})..."):
+                sys_prompt = "You are a military intelligence tactical engine operating under the Universal Elemental XXSFX-A Doctrine. Analyze the user's recon/surveillance query using 5D strategy (Detect, Deter, Deny, Deliver, Destroy). Provide structured tactical points."
+                user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nSelected Elements: {', '.join(st.session_state.selected_elements)}\nQuery: {st.session_state.query_tab1}"
+                
+                ai_result, err = run_grok_intelligence(sys_prompt, user_prompt)
+
+            if ai_result:
+                st.markdown(f"""
+                <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 GROK DIVINE ELEMENTAL ANALYSIS ({GROK_MODEL}):</div>
+                    <p><b>Directive Processed:</b> "{st.session_state.query_tab1}"</p>
+                    <div>{ai_result}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.warning(err)
 
     col1, col2 = st.columns([1, 1])
 
@@ -402,16 +444,22 @@ with tab2:
 
     if tab2_submitted or st.session_state.query_tab2.strip():
         if st.session_state.query_tab2.strip():
-            st.markdown(f"""
-            <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 REVERSE 5D & BOS ANALYSIS:</div>
-                <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab2}"</p>
-                <ul>
-                    <li><b>Reverse Detect Matrix:</b> Subterranean earth cloaking active against adversary active sensors.</li>
-                    <li><b>BOS Neutralization:</b> Adversary command nodes identified for water-fluid bypass and lightning strike.</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            with st.spinner(f"⚡ Processing directive via Grok API ({GROK_MODEL})..."):
+                sys_prompt = "You are a military intelligence tactical engine specializing in Reverse 5D Counter-Matrix and Battle Operating Systems (BOS) neutralization. Provide precise counter-detection strategies."
+                user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nTarget BOS: {', '.join(st.session_state.detected_bos)}\nQuery: {st.session_state.query_tab2}"
+                
+                ai_result, err = run_grok_intelligence(sys_prompt, user_prompt)
+
+            if ai_result:
+                st.markdown(f"""
+                <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 GROK REVERSE 5D & BOS ANALYSIS ({GROK_MODEL}):</div>
+                    <p><b>Directive Processed:</b> "{st.session_state.query_tab2}"</p>
+                    <div>{ai_result}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.warning(err)
 
     col_a, col_b = st.columns([1, 1])
 
@@ -517,16 +565,22 @@ with tab3:
 
     if tab3_submitted or st.session_state.query_tab3.strip():
         if st.session_state.query_tab3.strip():
-            st.markdown(f"""
-            <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 SF OPERATIONAL & EXFILTRATION ANALYSIS:</div>
-                <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab3}"</p>
-                <ul>
-                    <li><b>Human Terrain Integration:</b> Team merges seamlessly with civilian mobility corridors.</li>
-                    <li><b>Exfiltration Protocol:</b> Zero-friction egress via drainage networks and stealth extraction windows.</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            with st.spinner(f"⚡ Processing directive via Grok API ({GROK_MODEL})..."):
+                sys_prompt = "You are a military intelligence advisor analyzing Special Forces tradecraft, human terrain integration, and exfiltration protocols under the Fire Parallel framework."
+                user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nIngress Window: {st.session_state.ingress_window}\nQuery: {st.session_state.query_tab3}"
+                
+                ai_result, err = run_grok_intelligence(sys_prompt, user_prompt)
+
+            if ai_result:
+                st.markdown(f"""
+                <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 GROK SF OPERATIONAL ANALYSIS ({GROK_MODEL}):</div>
+                    <p><b>Directive Processed:</b> "{st.session_state.query_tab3}"</p>
+                    <div>{ai_result}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.warning(err)
 
     st.markdown("""
     <div class="gold-card">
