@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Military / Tactical Styling with Embossed Gold Accents & Always-Visible Gold Tabs
+# Custom Military / Tactical Styling with Embossed Gold Accents & High-Contrast Inputs
 st.markdown("""
 <style>
     /* Main Background & Text */
@@ -59,18 +59,7 @@ st.markdown("""
         text-transform: uppercase;
     }
 
-    /* Sub-cards and badges */
-    .element-badge {
-        background-color: #243326;
-        color: #f0e68c;
-        border: 1px solid #D4AF37;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        font-weight: bold;
-    }
-
-    /* Overt Gold Tabs Styling - Always Visible, High Contrast (No Hover/Touch Required) */
+    /* Overt Gold Tabs Styling - Fully visible gold text & background without hover requirement */
     .stTabs [data-baseweb="tab-list"] {
         gap: 6px;
         background-color: #161e17 !important;
@@ -111,25 +100,27 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* Fixed Input Controls: Dark background with visible Gold text */
+    /* FIXED INPUT CONTROLS: Pure Black Text (#000000) on Light Gold/Cream Background (#f5ebd0) for maximum legibility */
     .stTextInput>div>div>input {
-        background-color: #161e17 !important;
-        color: #D4AF37 !important;
-        border: 1px solid #D4AF37 !important;
-        -webkit-text-fill-color: #D4AF37 !important;
+        background-color: #f5ebd0 !important;
+        color: #000000 !important;
+        border: 2px solid #D4AF37 !important;
+        font-weight: bold !important;
+        -webkit-text-fill-color: #000000 !important;
     }
     
     .stTextArea>div>div>textarea {
-        background-color: #161e17 !important;
-        color: #D4AF37 !important;
-        border: 1px solid #D4AF37 !important;
-        -webkit-text-fill-color: #D4AF37 !important;
+        background-color: #f5ebd0 !important;
+        color: #000000 !important;
+        border: 2px solid #D4AF37 !important;
+        font-weight: bold !important;
+        -webkit-text-fill-color: #000000 !important;
     }
 
     .stSelectbox>div>div>div {
-        background-color: #161e17 !important;
-        color: #D4AF37 !important;
-        border: 1px solid #D4AF37 !important;
+        background-color: #f5ebd0 !important;
+        color: #000000 !important;
+        border: 2px solid #D4AF37 !important;
     }
 
     /* Buttons */
@@ -140,6 +131,8 @@ st.markdown("""
         font-weight: bold;
         text-shadow: 1px 1px 2px #000;
         transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
     }
     .stButton>button:hover {
         background: #D4AF37;
@@ -165,7 +158,7 @@ if 'detected_bos' not in st.session_state:
 if 'ingress_window' not in st.session_state:
     st.session_state.ingress_window = "0200 - 0430 hrs (Low Thermal / Fog Cover)"
 
-# User Query Box States for Tabs 1, 2, and 3 (Left blank by default as requested)
+# User Query Box States for Tabs 1, 2, and 3
 if 'query_tab1' not in st.session_state:
     st.session_state.query_tab1 = ""
 if 'query_tab2' not in st.session_state:
@@ -261,11 +254,11 @@ with tab1:
     st.markdown("### MODULE 1: THE ELEMENTAL 5D STRATEGY (DETECT, DETER, DENY, DELIVER, DESTROY)")
     st.write("Nature provides the ultimate unstoppable reconnaissance and surveillance architecture. The enemy cannot detect, deter, deny, deliver, or destroy the Sun, the River, the Wind, or the Earth. XXSFX-A operators map these natural behaviors to become invincible, fluid, and undetectable.")
 
-    # Query Box for Tab 1 (Blank by default, clearly typed)
+    # Query Box & Dedicated Enter / Execute Button for Tab 1
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
         <div class="gold-card-title">TAB 1 INTELLIGENCE QUERY & LOGIC ANALYSIS CONSOLE</div>
-        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific recon/surveillance parameters, infiltration requirements, or divine elemental focus for Tab 1:</p>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific recon/surveillance parameters, infiltration requirements, or divine elemental focus below, then click **Execute Tab 1 Directive**:</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -276,18 +269,23 @@ with tab1:
         key="t1_input"
     )
 
-    if st.session_state.query_tab1.strip():
-        st.markdown(f"""
-        <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF;">
-            <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 DIVINE ELEMENTAL ANALYSIS & RECON PLAN:</div>
-            <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab1}"</p>
-            <ul>
-                <li><b>Sun/Sky ISR Layer:</b> Unblinking optical & SIGINT baseline established over sector <b>{st.session_state.target_sector}</b>.</li>
-                <li><b>Air Acoustic Vector:</b> Passive acoustic listening posts deployed to intercept adversary communications without emitting counter-signatures.</li>
-                <li><b>Reconnaissance Outcome:</b> Complete invisibility achieved by mapping natural environmental frequencies.</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    col_btn1, col_space1 = st.columns([1, 3])
+    with col_btn1:
+        tab1_submitted = st.button("🚀 Execute Tab 1 Directive", key="btn_t1")
+
+    if tab1_submitted or st.session_state.query_tab1.strip():
+        if st.session_state.query_tab1.strip():
+            st.markdown(f"""
+            <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
+                <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 DIVINE ELEMENTAL ANALYSIS & RECON PLAN:</div>
+                <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab1}"</p>
+                <ul>
+                    <li><b>Sun/Sky ISR Layer:</b> Unblinking optical & SIGINT baseline established over sector <b>{st.session_state.target_sector}</b>[cite: 16].</li>
+                    <li><b>Air Acoustic Vector:</b> Passive acoustic listening posts deployed to intercept adversary communications without emitting counter-signatures.</li>
+                    <li><b>Reconnaissance Outcome:</b> Complete invisibility achieved by mapping natural environmental frequencies.</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 1])
 
@@ -348,10 +346,10 @@ with tab1:
         st.markdown("<div class=\"gold-card-title\">INTERACTIVE RECON PATROL SIMULATOR</div>", unsafe_allow_html=True)
         st.session_state.recon_scenario = st.text_area("Formulate XXSFX-A Patrol Operational Scenario:", value=st.session_state.recon_scenario)
         
-        if st.button("Generate Elemental Invincibility Analysis"):
+        if st.button("Generate Elemental Invincibility Analysis", key="btn_recon_sim"):
             st.success("Elemental Mapping Generated:")
             st.markdown(f"""
-            - 🌊 **River Pathing:** Infiltrate via drainage channels in sector **{st.session_state.target_sector}**.
+            - 🌊 **River Pathing:** Infiltrate via drainage channels in sector **{st.session_state.target_sector}**[cite: 16].
             - 💨 **Air Masking:** Synchronize movement with ambient acoustic noise during **{op_environment}** atmospheric shifts.
             - ⛰️ **Earth/Mountain Armor:** Establish hide sites inside static subterranean geographic pockets.
             """)
@@ -364,11 +362,11 @@ with tab2:
     st.markdown("### MODULE 2: REVERSE 5D ADVERSARY COUNTER-MATRIX & HIDDEN BATTLE OPERATING SYSTEMS (BOS)")
     st.write("To defeat the adversary inside our borders or across hostile lines, XXSFX-A must map the enemy's Battle Operating Systems (BOS)—both visible and hidden—while deploying the Reverse 5D Counter-Matrix.")
 
-    # Query Box for Tab 2 (Blank by default, clearly typed)
+    # Query Box & Dedicated Execute Button for Tab 2
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
         <div class="gold-card-title">TAB 2 REVERSE 5D & BOS DETECTOR QUERY CONSOLE</div>
-        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific adversary BOS target, counter-detection requirement, or cross-border penetration challenge for Tab 2:</p>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific adversary BOS target, counter-detection requirement, or cross-border penetration challenge below, then click **Execute Tab 2 Directive**:</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -379,17 +377,22 @@ with tab2:
         key="t2_input"
     )
 
-    if st.session_state.query_tab2.strip():
-        st.markdown(f"""
-        <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF;">
-            <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 REVERSE 5D & BOS ANALYSIS:</div>
-            <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab2}"</p>
-            <ul>
-                <li><b>Reverse Detect Matrix:</b> Subterranean earth cloaking active against adversary active sensors.</li>
-                <li><b>BOS Neutralization:</b> Adversary command nodes identified for water-fluid bypass and lightning strike.</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    col_btn2, col_space2 = st.columns([1, 3])
+    with col_btn2:
+        tab2_submitted = st.button("🚀 Execute Tab 2 Directive", key="btn_t2")
+
+    if tab2_submitted or st.session_state.query_tab2.strip():
+        if st.session_state.query_tab2.strip():
+            st.markdown(f"""
+            <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
+                <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 REVERSE 5D & BOS ANALYSIS:</div>
+                <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab2}"</p>
+                <ul>
+                    <li><b>Reverse Detect Matrix:</b> Subterranean earth cloaking active against adversary active sensors.</li>
+                    <li><b>BOS Neutralization:</b> Adversary command nodes identified for water-fluid bypass and lightning strike.</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
 
     col_a, col_b = st.columns([1, 1])
 
@@ -459,11 +462,11 @@ with tab2:
     
     with c2:
         st.markdown("<span style='color:#D4AF37; font-weight:bold;'>Border Zone Domain</span>", unsafe_allow_html=True)
-        border_domain = st.radio("Location", ["Cross-Border Hostile Territory", "Internal Border Grid / Hidden Sleeper Cells"])
+        border_domain = st.radio("Location", ["Cross-Border Hostile Territory", "Internal Border Grid / Hidden Sleeper Cells"], key="border_domain_radio")
     
     with c3:
         st.markdown("<span style='color:#D4AF37; font-weight:bold;'>Calculated Ingress/Egress Window</span>", unsafe_allow_html=True)
-        window = st.text_input("Optimal Time Window", value=st.session_state.ingress_window)
+        window = st.text_input("Optimal Time Window", value=st.session_state.ingress_window, key="ingress_window_input")
         st.session_state.ingress_window = window
 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -475,11 +478,11 @@ with tab3:
     st.markdown("### MODULE 3: THE FIRE PARALLEL — ANATOMY OF THE ELITE XXSFX-A OPERATOR")
     st.write("Fire creates immense light and heat through the deliberate, controlled consumption of its own body. An elite XXSFX-A operator burns their physical reserves, youth, and comfort to illuminate the dark and project force for the nation.")
 
-    # Query Box for Tab 3 (Blank by default, clearly typed)
+    # Query Box & Dedicated Execute Button for Tab 3
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
         <div class="gold-card-title">TAB 3 SF OPERATIONAL & EXFILTRATION QUERY CONSOLE</div>
-        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific SF operator tradecraft, human terrain integration, or exfiltration criteria for Tab 3:</p>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific SF operator tradecraft, human terrain integration, or exfiltration criteria below, then click **Execute Tab 3 Directive**:</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -490,17 +493,22 @@ with tab3:
         key="t3_input"
     )
 
-    if st.session_state.query_tab3.strip():
-        st.markdown(f"""
-        <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF;">
-            <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 SF OPERATIONAL & EXFILTRATION ANALYSIS:</div>
-            <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab3}"</p>
-            <ul>
-                <li><b>Human Terrain Integration:</b> Team merges seamlessly with civilian mobility corridors.</li>
-                <li><b>Exfiltration Protocol:</b> Zero-friction egress via drainage networks and stealth extraction windows.</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    col_btn3, col_space3 = st.columns([1, 3])
+    with col_btn3:
+        tab3_submitted = st.button("🚀 Execute Tab 3 Directive", key="btn_t3")
+
+    if tab3_submitted or st.session_state.query_tab3.strip():
+        if st.session_state.query_tab3.strip():
+            st.markdown(f"""
+            <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
+                <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 SF OPERATIONAL & EXFILTRATION ANALYSIS:</div>
+                <p><b>Custom Directive Processed:</b> "{st.session_state.query_tab3}"</p>
+                <ul>
+                    <li><b>Human Terrain Integration:</b> Team merges seamlessly with civilian mobility corridors.</li>
+                    <li><b>Exfiltration Protocol:</b> Zero-friction egress via drainage networks and stealth extraction windows.</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
 
     st.markdown("""
     <div class="gold-card">
@@ -561,7 +569,7 @@ with tab4:
     st.markdown("### MODULE 4: EXECUTIVE STRATEGIC BRIEFING & SEALED INTELLIGENCE SUMMARY")
     st.write("This tab aggregates all inputs, selections, scenario analyses, and live queries from Tabs 1, 2, and 3 into a sealed, complete intelligence and divine battlefield summary for the GOC.")
 
-    # Check if the first three boxes have been filled
+    # Check if the first three query boxes have been filled
     t1_filled = bool(st.session_state.query_tab1.strip())
     t2_filled = bool(st.session_state.query_tab2.strip())
     t3_filled = bool(st.session_state.query_tab3.strip())
