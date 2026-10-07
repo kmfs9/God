@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Military / Tactical Styling with Embossed Gold Accents & Fixed Tab Text Colors
+# Custom Military / Tactical Styling with Embossed Gold Accents & Overt Gold Tabs
 st.markdown("""
 <style>
     /* Main Background & Text */
@@ -70,38 +70,44 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* Tabs Styling with Fixed Text Color Visibility */
+    /* Overt Gold Tabs Styling (Fully Visible Without Hover or Touch) */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #121813;
-        border-bottom: 2px solid #D4AF37;
-        padding: 5px;
+        gap: 6px;
+        background-color: #161e17;
+        border: 2px solid #D4AF37;
+        border-radius: 6px 6px 0px 0px;
+        padding: 8px;
+        overflow-x: auto;
     }
 
     .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        white-space: pre-wrap;
-        background-color: #1c261e;
-        border: 1px solid #3d4f3f;
+        height: 52px;
+        background-color: #1c281e !important;
+        border: 2px solid #D4AF37 !important;
         border-radius: 4px 4px 0px 0px;
-        color: #f0e68c !important;
-        font-weight: bold;
+        color: #D4AF37 !important;
+        font-weight: bold !important;
+        font-size: 0.95rem !important;
+        padding: 0 16px;
+        opacity: 1 !important;
     }
 
     .stTabs [data-baseweb="tab"] p {
-        color: #f0e68c !important;
+        color: #D4AF37 !important;
+        font-weight: bold !important;
     }
 
     .stTabs [aria-selected="true"] {
-        background-color: #28382b !important;
+        background: linear-gradient(180deg, #3a4d3c 0%, #243326 100%) !important;
         border: 2px solid #D4AF37 !important;
-        border-bottom: none !important;
-        color: #D4AF37 !important;
-        text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        border-bottom: 3px solid #0b0e0c !important;
+        color: #ffffff !important;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.9);
+        box-shadow: 0 -2px 10px rgba(212, 175, 55, 0.4);
     }
 
     .stTabs [aria-selected="true"] p {
-        color: #D4AF37 !important;
+        color: #ffffff !important;
     }
 
     /* Input Controls Customization */
@@ -201,7 +207,6 @@ if os.path.exists(image_filename):
     col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
     with col_img2:
         img = Image.open(image_filename)
-        # Optional width styling or direct display
         st.image(img, use_container_width=True)
 else:
     st.markdown(f"""
@@ -218,12 +223,12 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Create 4 Tabs (3 Core Modules + 1 Commander-in-Chief Synthesis Tab)
+# Create 4 Overt Gold Tabs (Fully Visible and Legible Without Touching)
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🌐 TAB 1: ELEMENTAL 5D TACTICAL MATRIX",
-    "🛡️ TAB 2: REVERSE 5D & HIDDEN BOS DISCOVERY",
-    "🔥 TAB 3: THE FIRE PARALLEL & ELITE TRADECRAFT",
-    "⚔️ TAB 4: C-IN-C EXECUTIVE STRATEGIC BRIEF"
+    "🌐 TAB 1: 5D TACTICAL MATRIX",
+    "🛡️ TAB 2: REVERSE 5D & BOS",
+    "🔥 TAB 3: FIRE PARALLEL",
+    "⚔️ TAB 4: GOC EXEC BRIEF"
 ])
 
 # ==============================================================================
@@ -494,14 +499,14 @@ with tab4:
             The XXSFX-A detachment operating under this doctrine acts with the invisibility of the Wind, the persistence of the Sun, the fluid stealth of the River, and the lethal precision of Lightning. By consuming their physical reserves (The Wick), operators illuminate the operational dark, uncover hidden adversary BOS, and execute cross-border missions with absolute invincibility and zero compromise.
         </p>
         
-        <div style="margin-top:20px; border-top: 1px solid #D4AF37; padding-top: 10px; text-align: right; font-size:0.8rem; color:#8a9a8c;">
+        <div style="margin-top:20px; border-top: 1px solid #D4AF37; padding-top: 10px; text-align: right; font-size:0.80rem; color:#8a9a8c;">
             <b>BY ORDER OF COMMAND:</b> XXSFX-A STRATEGIC CELL (KOLKATA GENESIS)
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     # Download Button for Briefing Text
-    brief_text = f"""TOP SECRET BRIEFING MEMORANDUM FORTHE GOC
+    brief_text = f"""TOP SECRET BRIEFING MEMORANDUM FOR THE GOC
 SUBJECT: Universal Elemental Doctrine - {st.session_state.op_name}
 DATE: {brief_date}
 SECTOR: {st.session_state.target_sector}
