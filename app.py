@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Military / Tactical Styling with Embossed Gold Accents & High-Contrast Black Input Boxes
+# Custom Military / Tactical Styling with Embossed Gold Accents & High-Contrast Input Boxes
 st.markdown("""
 <style>
     /* Main Background & Text */
@@ -104,9 +104,9 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* FIXED INPUT CONTROLS: Pure Black Background (#161e17) with Crisp White Text (#ffffff) */
+    /* FIXED INPUT CONTROLS: Pure Dark Background (#121813) with Crisp Pure White Text (#ffffff) */
     .stTextInput>div>div>input {
-        background-color: #161e17 !important;
+        background-color: #121813 !important;
         color: #ffffff !important;
         border: 2px solid #D4AF37 !important;
         font-weight: bold !important;
@@ -114,7 +114,7 @@ st.markdown("""
     }
     
     .stTextArea>div>div>textarea {
-        background-color: #161e17 !important;
+        background-color: #121813 !important;
         color: #ffffff !important;
         border: 2px solid #D4AF37 !important;
         font-weight: bold !important;
@@ -122,9 +122,14 @@ st.markdown("""
     }
 
     .stSelectbox>div>div>div {
-        background-color: #161e17 !important;
+        background-color: #121813 !important;
         color: #ffffff !important;
         border: 2px solid #D4AF37 !important;
+    }
+    
+    /* Ensure markdown and helper texts inside text input containers are fully readable */
+    .stTextInput div[data-baseweb="base-input"], .stTextArea div[data-baseweb="base-input"] {
+        background-color: #121813 !important;
     }
 
     /* Buttons */
@@ -269,7 +274,8 @@ with tab1:
         "Enter Tab 1 Recon & Surveillance Query:",
         value=st.session_state.query_tab1,
         placeholder="Type custom reconnaissance directives, sensor deployment plans, or baseline anomaly criteria here...",
-        key="t1_input"
+        key="t1_input",
+        label_visibility="collapsed"
     )
 
     col_btn1, col_space1 = st.columns([1, 3])
@@ -346,7 +352,7 @@ with tab1:
 
         st.markdown("<div class=\"gold-card\">", unsafe_allow_html=True)
         st.markdown("<div class=\"gold-card-title\">INTERACTIVE RECON PATROL SIMULATOR</div>", unsafe_allow_html=True)
-        st.session_state.recon_scenario = st.text_area("Formulate XXSFX-A Patrol Operational Scenario:", value=st.session_state.recon_scenario)
+        st.session_state.recon_scenario = st.text_area("Formulate XXSFX-A Patrol Operational Scenario:", value=st.session_state.recon_scenario, label_visibility="collapsed")
         
         if st.button("Generate Elemental Invincibility Analysis", key="btn_recon_sim"):
             st.success("Elemental Mapping Generated:")
@@ -375,7 +381,8 @@ with tab2:
         "Enter Tab 2 Reverse 5D & BOS Query:",
         value=st.session_state.query_tab2,
         placeholder="Type adversary radar/C2 targets, counter-surveillance parameters, or covert ingress criteria here...",
-        key="t2_input"
+        key="t2_input",
+        label_visibility="collapsed"
     )
 
     col_btn2, col_space2 = st.columns([1, 3])
@@ -489,7 +496,8 @@ with tab3:
         "Enter Tab 3 SF Operational Query:",
         value=st.session_state.query_tab3,
         placeholder="Type cross-border exfiltration, human terrain alignment, or operator self-consumption parameters here...",
-        key="t3_input"
+        key="t3_input",
+        label_visibility="collapsed"
     )
 
     col_btn3, col_space3 = st.columns([1, 3])
@@ -523,7 +531,7 @@ with tab3:
             </div>
             <div style="flex: 1; min-width: 220px; background: #1c261e; padding: 12px; border: 1px solid #D4AF37; border-radius: 5px;">
                 <h4 style="color:#D4AF37; margin-top:0;">3. THE WICK (Self-Consumption)</h4>
-                <p style="font-size:0.85rem;"><b>Grit & Physical Capital:</b> Fire burns its own wax and wood. The operator spends their personal physical capital, longevity, and mental bandwidth in silent service.</p>
+                <p style="font-size:0.85rem;"><b>Grit & Physical Capital:</b> Fire burns its own wood and wax. The operator spends their personal physical capital, longevity, and mental bandwidth in silent service.</p>
             </div>
             <div style="flex: 1; min-width: 220px; background: #1c261e; padding: 12px; border: 1px solid #D4AF37; border-radius: 5px;">
                 <h4 style="color:#D4AF37; margin-top:0;">4. EXTINCTION (Vanishing)</h4>
@@ -665,5 +673,5 @@ Complete divine battlefield synthesis successfully generated. All ingress, egres
             label="📄 Download Sealed GOC Intelligence Summary (.txt)",
             data=brief_text,
             file_name=f"Sealed_GOC_Intelligence_Summary_{st.session_state.op_name.replace(' ', '_')}.txt",
-            mime=""
+            mime="text/plain"
         )
