@@ -188,30 +188,30 @@ if 'query_tab3' not in st.session_state:
     st.session_state.query_tab3 = ""
 
 # ==============================================================================
-# GROK / XAI API HELPER FUNCTION (USING openai/gpt-oss-120b)
+# GROQ API HELPER FUNCTION (USING openai/gpt-oss-120b)
 # ==============================================================================
-GROK_MODEL = "openai/gpt-oss-120b"
+GROQ_MODEL = "openai/gpt-oss-120b"
 
-def run_grok_intelligence(system_instruction: str, prompt_text: str):
-    """Retrieves secret GROK_API_KEY from Streamlit secrets and calls xAI API."""
-    api_key = st.secrets.get("GROK_API_KEY", st.secrets.get("XAI_API_KEY", None))
+def run_groq_intelligence(system_instruction: str, prompt_text: str):
+    """Retrieves secret GROQ_API_KEY from Streamlit secrets and calls Groq API."""
+    api_key = st.secrets.get("GROQ_API_KEY", None)
     
     if not api_key:
         return None, (
-            "⚠️ **GROK_API_KEY Missing in Streamlit Secrets.**\n\n"
-            "To enable live Grok AI analysis, save your key in `.streamlit/secrets.toml` or Streamlit Cloud Secrets:\n"
+            "⚠️ **GROQ_API_KEY Missing in Streamlit Secrets.**\n\n"
+            "To enable live Groq AI analysis, save your key in `.streamlit/secrets.toml` or Streamlit Cloud Secrets:\n"
             "```toml\n"
-            "GROK_API_KEY = \"xai-your-api-key-here\"\n"
+            "GROQ_API_KEY = \"gsk_your_api_key_here\"\n"
             "```"
         )
     
     try:
         client = OpenAI(
             api_key=api_key,
-            base_url="https://api.x.ai/v1"
+            base_url="https://api.groq.com/openai/v1"
         )
         response = client.chat.completions.create(
-            model=GROK_MODEL,
+            model=GROQ_MODEL,
             messages=[
                 {"role": "system", "content": system_instruction},
                 {"role": "user", "content": prompt_text}
@@ -221,10 +221,10 @@ def run_grok_intelligence(system_instruction: str, prompt_text: str):
         )
         return response.choices[0].message.content, None
     except Exception as e:
-        return None, f"⚠️ **Grok API Execution Error:** {str(e)}"
+        return None, f"⚠️ **Groq API Execution Error:** {str(e)}"
 
 # ==============================================================================
-# 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX (UNTOUCHED)
+# 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX
 # ==============================================================================
 with st.sidebar:
     st.markdown("""
@@ -332,16 +332,16 @@ with tab1:
 
     if tab1_submitted or st.session_state.query_tab1.strip():
         if st.session_state.query_tab1.strip():
-            with st.spinner(f"⚡ Processing directive via Grok API ({GROK_MODEL})..."):
+            with st.spinner(f"⚡ Processing directive via Groq API ({GROQ_MODEL})..."):
                 sys_prompt = "You are a military intelligence tactical engine operating under the Universal Elemental XXSFX-A Doctrine. Analyze the user's recon/surveillance query using 5D strategy (Detect, Deter, Deny, Deliver, Destroy). Provide structured tactical points."
                 user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nSelected Elements: {', '.join(st.session_state.selected_elements)}\nQuery: {st.session_state.query_tab1}"
                 
-                ai_result, err = run_grok_intelligence(sys_prompt, user_prompt)
+                ai_result, err = run_groq_intelligence(sys_prompt, user_prompt)
 
             if ai_result:
                 st.markdown(f"""
                 <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 GROK DIVINE ELEMENTAL ANALYSIS ({GROK_MODEL}):</div>
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 GROQ DIVINE ELEMENTAL ANALYSIS ({GROQ_MODEL}):</div>
                     <p><b>Directive Processed:</b> "{st.session_state.query_tab1}"</p>
                     <div>{ai_result}</div>
                 </div>
@@ -444,16 +444,16 @@ with tab2:
 
     if tab2_submitted or st.session_state.query_tab2.strip():
         if st.session_state.query_tab2.strip():
-            with st.spinner(f"⚡ Processing directive via Grok API ({GROK_MODEL})..."):
+            with st.spinner(f"⚡ Processing directive via Groq API ({GROQ_MODEL})..."):
                 sys_prompt = "You are a military intelligence tactical engine specializing in Reverse 5D Counter-Matrix and Battle Operating Systems (BOS) neutralization. Provide precise counter-detection strategies."
                 user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nTarget BOS: {', '.join(st.session_state.detected_bos)}\nQuery: {st.session_state.query_tab2}"
                 
-                ai_result, err = run_grok_intelligence(sys_prompt, user_prompt)
+                ai_result, err = run_groq_intelligence(sys_prompt, user_prompt)
 
             if ai_result:
                 st.markdown(f"""
                 <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 GROK REVERSE 5D & BOS ANALYSIS ({GROK_MODEL}):</div>
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 GROQ REVERSE 5D & BOS ANALYSIS ({GROQ_MODEL}):</div>
                     <p><b>Directive Processed:</b> "{st.session_state.query_tab2}"</p>
                     <div>{ai_result}</div>
                 </div>
@@ -565,16 +565,16 @@ with tab3:
 
     if tab3_submitted or st.session_state.query_tab3.strip():
         if st.session_state.query_tab3.strip():
-            with st.spinner(f"⚡ Processing directive via Grok API ({GROK_MODEL})..."):
+            with st.spinner(f"⚡ Processing directive via Groq API ({GROQ_MODEL})..."):
                 sys_prompt = "You are a military intelligence advisor analyzing Special Forces tradecraft, human terrain integration, and exfiltration protocols under the Fire Parallel framework."
                 user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nIngress Window: {st.session_state.ingress_window}\nQuery: {st.session_state.query_tab3}"
                 
-                ai_result, err = run_grok_intelligence(sys_prompt, user_prompt)
+                ai_result, err = run_groq_intelligence(sys_prompt, user_prompt)
 
             if ai_result:
                 st.markdown(f"""
                 <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 GROK SF OPERATIONAL ANALYSIS ({GROK_MODEL}):</div>
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 GROQ SF OPERATIONAL ANALYSIS ({GROQ_MODEL}):</div>
                     <p><b>Directive Processed:</b> "{st.session_state.query_tab3}"</p>
                     <div>{ai_result}</div>
                 </div>
