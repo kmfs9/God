@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Military / Tactical Styling with Embossed Gold Accents & High-Contrast Inputs
+# Custom Military / Tactical Styling with Embossed Gold Accents & High-Contrast Black Input Boxes
 st.markdown("""
 <style>
     /* Main Background & Text */
@@ -59,25 +59,29 @@ st.markdown("""
         text-transform: uppercase;
     }
 
-    /* Overt Gold Tabs Styling - Fully visible gold text & background without hover requirement */
+    /* Overt Gold Tabs Styling - Fully visible on mobile without overlapping/hiding */
     .stTabs [data-baseweb="tab-list"] {
+        display: flex !important;
+        flex-wrap: nowrap !important;
         gap: 6px;
         background-color: #161e17 !important;
         border: 2px solid #D4AF37 !important;
         border-radius: 6px 6px 0px 0px;
         padding: 8px;
-        overflow-x: auto;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     .stTabs [data-baseweb="tab"] {
-        height: 52px;
+        height: 48px;
         background-color: #1c281e !important;
         border: 2px solid #D4AF37 !important;
         border-radius: 4px 4px 0px 0px;
         color: #D4AF37 !important;
         font-weight: bold !important;
-        font-size: 0.95rem !important;
-        padding: 0 16px;
+        font-size: 0.85rem !important;
+        padding: 0 12px;
+        flex-shrink: 0 !important;
         opacity: 1 !important;
     }
 
@@ -100,26 +104,26 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* FIXED INPUT CONTROLS: Pure Black Text (#000000) on Light Gold/Cream Background (#f5ebd0) for maximum legibility */
+    /* FIXED INPUT CONTROLS: Pure Black Background (#161e17) with Crisp White Text (#ffffff) */
     .stTextInput>div>div>input {
-        background-color: #f5ebd0 !important;
-        color: #000000 !important;
+        background-color: #161e17 !important;
+        color: #ffffff !important;
         border: 2px solid #D4AF37 !important;
         font-weight: bold !important;
-        -webkit-text-fill-color: #000000 !important;
+        -webkit-text-fill-color: #ffffff !important;
     }
     
     .stTextArea>div>div>textarea {
-        background-color: #f5ebd0 !important;
-        color: #000000 !important;
+        background-color: #161e17 !important;
+        color: #ffffff !important;
         border: 2px solid #D4AF37 !important;
         font-weight: bold !important;
-        -webkit-text-fill-color: #000000 !important;
+        -webkit-text-fill-color: #ffffff !important;
     }
 
     .stSelectbox>div>div>div {
-        background-color: #f5ebd0 !important;
-        color: #000000 !important;
+        background-color: #161e17 !important;
+        color: #ffffff !important;
         border: 2px solid #D4AF37 !important;
     }
 
@@ -239,7 +243,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Create 4 Overt Gold Tabs (Always visible, high contrast text)
+# Create 4 Overt Gold Tabs with horizontal touch-scrolling and full visibility
 tab1, tab2, tab3, tab4 = st.tabs([
     "🌐 TAB 1: 5D TACTICAL MATRIX",
     "🛡️ TAB 2: REVERSE 5D & BOS",
@@ -254,7 +258,6 @@ with tab1:
     st.markdown("### MODULE 1: THE ELEMENTAL 5D STRATEGY (DETECT, DETER, DENY, DELIVER, DESTROY)")
     st.write("Nature provides the ultimate unstoppable reconnaissance and surveillance architecture. The enemy cannot detect, deter, deny, deliver, or destroy the Sun, the River, the Wind, or the Earth. XXSFX-A operators map these natural behaviors to become invincible, fluid, and undetectable.")
 
-    # Query Box & Dedicated Enter / Execute Button for Tab 1
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
         <div class="gold-card-title">TAB 1 INTELLIGENCE QUERY & LOGIC ANALYSIS CONSOLE</div>
@@ -341,7 +344,6 @@ with tab1:
         </div>
         """, unsafe_allow_html=True)
 
-        # Interactive Reconnaissance Planner
         st.markdown("<div class=\"gold-card\">", unsafe_allow_html=True)
         st.markdown("<div class=\"gold-card-title\">INTERACTIVE RECON PATROL SIMULATOR</div>", unsafe_allow_html=True)
         st.session_state.recon_scenario = st.text_area("Formulate XXSFX-A Patrol Operational Scenario:", value=st.session_state.recon_scenario)
@@ -362,7 +364,6 @@ with tab2:
     st.markdown("### MODULE 2: REVERSE 5D ADVERSARY COUNTER-MATRIX & HIDDEN BATTLE OPERATING SYSTEMS (BOS)")
     st.write("To defeat the adversary inside our borders or across hostile lines, XXSFX-A must map the enemy's Battle Operating Systems (BOS)—both visible and hidden—while deploying the Reverse 5D Counter-Matrix.")
 
-    # Query Box & Dedicated Execute Button for Tab 2
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
         <div class="gold-card-title">TAB 2 REVERSE 5D & BOS DETECTOR QUERY CONSOLE</div>
@@ -444,7 +445,6 @@ with tab2:
         </div>
         """, unsafe_allow_html=True)
 
-    # Hidden BOS Mapping Workspace
     st.markdown("""
     <div class="gold-card">
         <div class="gold-card-title">HIDDEN BOS DISCOVERY & ATTACK WINDOW CALCULATOR</div>
@@ -478,7 +478,6 @@ with tab3:
     st.markdown("### MODULE 3: THE FIRE PARALLEL — ANATOMY OF THE ELITE XXSFX-A OPERATOR")
     st.write("Fire creates immense light and heat through the deliberate, controlled consumption of its own body. An elite XXSFX-A operator burns their physical reserves, youth, and comfort to illuminate the dark and project force for the nation.")
 
-    # Query Box & Dedicated Execute Button for Tab 3
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
         <div class="gold-card-title">TAB 3 SF OPERATIONAL & EXFILTRATION QUERY CONSOLE</div>
@@ -569,7 +568,6 @@ with tab4:
     st.markdown("### MODULE 4: EXECUTIVE STRATEGIC BRIEFING & SEALED INTELLIGENCE SUMMARY")
     st.write("This tab aggregates all inputs, selections, scenario analyses, and live queries from Tabs 1, 2, and 3 into a sealed, complete intelligence and divine battlefield summary for the GOC.")
 
-    # Check if the first three query boxes have been filled
     t1_filled = bool(st.session_state.query_tab1.strip())
     t2_filled = bool(st.session_state.query_tab2.strip())
     t3_filled = bool(st.session_state.query_tab3.strip())
@@ -667,5 +665,5 @@ Complete divine battlefield synthesis successfully generated. All ingress, egres
             label="📄 Download Sealed GOC Intelligence Summary (.txt)",
             data=brief_text,
             file_name=f"Sealed_GOC_Intelligence_Summary_{st.session_state.op_name.replace(' ', '_')}.txt",
-            mime="text/plain"
+            mime=""
         )
