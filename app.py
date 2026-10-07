@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from PIL import Image
+import os
 
 # ==============================================================================
 # 1. PAGE CONFIGURATION & MILITARY GOLDEN THEME (CUSTOM CSS)
@@ -188,35 +190,27 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 4. MAIN BODY HEADER: DIVINE COMMANDING OFFICER & C4ISR (CROPPED KRISHNA LOGO)
+# 4. MAIN BODY HEADER: DIVINE COMMANDING OFFICER & C4ISR (IMAGE REFLECTED)
 # ==============================================================================
 st.markdown("""
 <div class="gold-card" style="text-align: center; margin-bottom: 25px;">
-    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-        <svg width="140" height="140" viewBox="25 5 50 90" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <radialGradient id="divineGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.8"/>
-                    <stop offset="50%" stop-color="#D4AF37" stop-opacity="0.4"/>
-                    <stop offset="100%" stop-color="#0b0e0c" stop-opacity="0"/>
-                </radialGradient>
-            </defs>
-            <!-- Background Halo Glow -->
-            <circle cx="50" cy="50" r="48" fill="url(#divineGlow)"/>
-            <circle cx="50" cy="50" r="44" fill="#121813" stroke="#D4AF37" stroke-width="2"/>
-            <circle cx="50" cy="50" r="38" fill="none" stroke="#D4AF37" stroke-width="1" stroke-dasharray="3,3"/>
-            <!-- Cosmic Radiance Rays -->
-            <path d="M 50 5 L 50 95 M 5 50 L 95 50 M 18 18 L 82 82 M 18 82 L 82 18" stroke="#D4AF37" stroke-width="1" opacity="0.5"/>
-            <!-- Lord Krishna Peacock Feather Symbol -->
-            <path d="M 50 20 C 42 10, 32 16, 40 28 C 47 38, 50 42, 50 42 C 50 42, 53 38, 60 28 C 68 16, 58 10, 50 20 Z" fill="#D4AF37" stroke="#00E5FF" stroke-width="0.5"/>
-            <ellipse cx="50" cy="24" rx="4" ry="6" fill="#00E5FF"/>
-            <!-- Hand holding Celestial Lightning Bolt -->
-            <path d="M 42 62 C 45 58, 55 58, 58 62" stroke="#D4AF37" stroke-width="2" fill="none"/>
-            <polygon points="53,35 43,54 50,54 44,74 60,48 51,48" fill="#00E5FF" stroke="#FFFFFF" stroke-width="0.8"/>
-            <!-- Lightning Energy Aura -->
-            <circle cx="50" cy="52" r="14" fill="none" stroke="#00E5FF" stroke-width="1" stroke-dasharray="2,2"/>
-        </svg>
+""", unsafe_allow_html=True)
+
+image_filename = "ccd1850d-bab6-433f-881e-43bf99d60e09.jpeg"
+if os.path.exists(image_filename):
+    col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
+    with col_img2:
+        img = Image.open(image_filename)
+        # Optional width styling or direct display
+        st.image(img, use_container_width=True)
+else:
+    st.markdown(f"""
+    <div style="color: #D4AF37; font-style: italic; margin-bottom: 15px;">
+        [Notice: Upload '{image_filename}' into the repository directory to render the Krishna artwork directly here.]
     </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("""
     <h1 style="margin: 0; font-size: 2.2rem; text-transform: uppercase; color: #D4AF37;">THE DIVINE COMMANDING OFFICER AND C4ISR</h1>
     <p style="color: #00E5FF; margin-top: 8px; font-size: 1.05rem; font-weight: bold; letter-spacing: 1px;">
         ⚡ Universal Elemental XXSFX-A Doctrine — Supreme Command, Control, Communications, Computers, Intelligence, Surveillance & Reconnaissance ⚡
