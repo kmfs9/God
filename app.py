@@ -128,8 +128,31 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. SESSION STATE INITIALIZATION
+# 2. HELPER FUNCTIONS & SESSION STATE INITIALIZATION
 # ==============================================================================
+def resolve_logo_path():
+    """Scans repository root and assets folder for logo11.jpg and backup image candidates."""
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = [
+        "logo11.jpg",
+        "logo11.jpeg",
+        "logo11.png",
+        "Logo11.jpg",
+        "DIVINE_COMMAND_C4ISR.jpg",
+        "logo.jpg",
+        "logo.png",
+        "assets/logo11.jpg"
+    ]
+    for candidate in candidates:
+        full_path = os.path.join(base_dir, candidate)
+        if os.path.exists(full_path):
+            return full_path
+        if os.path.exists(candidate):
+            return candidate
+    return None
+
+logo_path = resolve_logo_path()
+
 if 'op_name' not in st.session_state:
     st.session_state.op_name = "OPERATION TRISHUL DHARMA"
 if 'target_sector' not in st.session_state:
@@ -208,16 +231,10 @@ def run_groq_intelligence(module_context: str, user_prompt: str):
 # 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX
 # ==============================================================================
 with st.sidebar:
-    # Sidebar Logo Insertion
-    logo_filename = "ccd1850d-bc01-443b-8bd2-e877d94fceb1.jpg"
-    if not os.path.exists(logo_filename):
-        for candidate in ["logo.png", "logo.jpg", "logo.jpeg", "DIVINE_COMMAND_C4ISR.jpg"]:
-            if os.path.exists(candidate):
-                logo_filename = candidate
-                break
-
-    if os.path.exists(logo_filename):
-        st.image(logo_filename, use_container_width=True)
+    if logo_path:
+        st.image(logo_path, use_container_width=True)
+    else:
+        st.warning("⚠️ logo11.jpg not found in repository.")
 
     st.markdown("""
     <div style="text-align: center; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 15px;">
@@ -255,9 +272,8 @@ st.markdown("""
 <div class="gold-card" style="text-align: center; margin-bottom: 25px;">
 """, unsafe_allow_html=True)
 
-image_filename = "ccd1850d-bc01-443b-8bd2-e877d94fceb1.jpg"
-if os.path.exists(image_filename):
-    st.image(image_filename, use_container_width=True, caption="DIVINE COMMAND & C4ISR MATRIX | UNIVERSAL ELEMENTAL FORCE MULTIPLIER")
+if logo_path:
+    st.image(logo_path, use_container_width=True, caption="DIVINE COMMAND & C4ISR MATRIX | UNIVERSAL ELEMENTAL FORCE MULTIPLIER")
 
 st.markdown("""
     <h1 style="margin-top:10px; margin-bottom: 5px;">DIVINE WARFARE & ELEMENTAL OPERATIONAL MATRIX</h1>
