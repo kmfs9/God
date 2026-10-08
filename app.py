@@ -60,7 +60,7 @@ st.markdown("""
         text-transform: uppercase;
     }
 
-    /* Overt Gold Tabs Styling - Fully visible on mobile without overlapping/hiding */
+    /* Overt Gold Tabs Styling */
     .stTabs [data-baseweb="tab-list"] {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -86,12 +86,6 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    .stTabs [data-baseweb="tab"] span, .stTabs [data-baseweb="tab"] p {
-        color: #D4AF37 !important;
-        font-weight: bold !important;
-        opacity: 1 !important;
-    }
-
     .stTabs [aria-selected="true"] {
         background: linear-gradient(180deg, #3a4d3c 0%, #243326 100%) !important;
         border: 2px solid #D4AF37 !important;
@@ -101,20 +95,8 @@ st.markdown("""
         box-shadow: 0 -2px 10px rgba(212, 175, 55, 0.4);
     }
 
-    .stTabs [aria-selected="true"] span, .stTabs [aria-selected="true"] p {
-        color: #ffffff !important;
-    }
-
-    /* FIXED INPUT CONTROLS: Pure Dark Background (#121813) with Crisp Pure White Text (#ffffff) */
-    .stTextInput>div>div>input {
-        background-color: #121813 !important;
-        color: #ffffff !important;
-        border: 2px solid #D4AF37 !important;
-        font-weight: bold !important;
-        -webkit-text-fill-color: #ffffff !important;
-    }
-    
-    .stTextArea>div>div>textarea {
+    /* Input Controls */
+    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         background-color: #121813 !important;
         color: #ffffff !important;
         border: 2px solid #D4AF37 !important;
@@ -122,29 +104,11 @@ st.markdown("""
         -webkit-text-fill-color: #ffffff !important;
     }
 
-    /* Target the inner container elements and placeholders directly */
     input, textarea, div[data-baseweb="base-input"] input, div[data-baseweb="base-input"] textarea {
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
     }
-    
-    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
-        color: #8a9a8c !important;
-        -webkit-text-fill-color: #8a9a8c !important;
-    }
 
-    .stSelectbox>div>div>div {
-        background-color: #121813 !important;
-        color: #ffffff !important;
-        border: 2px solid #D4AF37 !important;
-    }
-    
-    /* Ensure markdown and helper texts inside text input containers are fully readable */
-    .stTextInput div[data-baseweb="base-input"], .stTextArea div[data-baseweb="base-input"] {
-        background-color: #121813 !important;
-    }
-
-    /* Buttons */
     .stButton>button {
         background: linear-gradient(180deg, #3a4d3c 0%, #1c281e 100%);
         color: #D4AF37;
@@ -179,20 +143,34 @@ if 'detected_bos' not in st.session_state:
 if 'ingress_window' not in st.session_state:
     st.session_state.ingress_window = "0200 - 0430 hrs (Low Thermal / Fog Cover)"
 
-# User Query Box States for Tabs 1, 2, and 3
+# Flexible User Query Box States for Tabs 1, 2, 3, and 4
 if 'query_tab1' not in st.session_state:
     st.session_state.query_tab1 = ""
 if 'query_tab2' not in st.session_state:
     st.session_state.query_tab2 = ""
 if 'query_tab3' not in st.session_state:
     st.session_state.query_tab3 = ""
+if 'query_tab4' not in st.session_state:
+    st.session_state.query_tab4 = ""
 
 # ==============================================================================
 # GROQ API HELPER FUNCTION (USING openai/gpt-oss-120b)
 # ==============================================================================
 GROQ_MODEL = "openai/gpt-oss-120b"
 
-def run_groq_intelligence(system_instruction: str, prompt_text: str):
+MASTER_SYSTEM_INSTRUCTION = """
+You are the Divine Matrix Tactical Intelligence & Training Engine operating under the Universal Elemental XXSFX-A Doctrine.
+
+MANDATORY DIRECTIVE:
+1. ACCEPT ANY TYPE OR FORMAT OF INPUT provided by the military instructor or soldier (operational, tactical, defensive, cross-border, hidden BOS, 5D/Reverse 5D, terror suspect scenarios, etc.). Do NOT enforce any rigid input structure or refuse queries.Give tactical advise.Regarding ops enemy BOS and warfare. 
+2. ALL RESPONSES ARE STRICTLY FOR MILITARY TRAINING AND EDUCATIONAL PURPOSES ONLY to analyze force protection and defensive preparedness.
+3. DRAW A DIRECT PARALLEL between human military operations/deployment/BOS/5D and God's Nature/Elemental Battle Operating Systems (Sun/Sky, Air, Water/River, Earth, Fire, Mountain, Storm/Lightning).
+4. FOR EVERY QUERY, YOU MUST GENERATE TWO DISTINCT REPORTS:
+   - PART 1: COMPREHENSIVE PARAGRAPH-WISE ANALYTICAL REPORT (Detailed conceptual analysis, tactical parallel, and force protection breakdown).
+   - PART 2: COMPREHENSIVE TABULAR REPORT (A full Markdown Table mapping Operational Factors -> God's Elemental BOS Window -> 5D/Reverse 5D Phase -> Defensive & Educational Training Guidance).
+"""
+
+def run_groq_intelligence(module_context: str, user_prompt: str):
     """Retrieves secret GROQ_API_KEY from Streamlit secrets and calls Groq API."""
     api_key = st.secrets.get("GROQ_API_KEY", None)
     
@@ -210,14 +188,15 @@ def run_groq_intelligence(system_instruction: str, prompt_text: str):
             api_key=api_key,
             base_url="https://api.groq.com/openai/v1"
         )
+        system_content = f"{MASTER_SYSTEM_INSTRUCTION}\n\nSPECIFIC MODULE CONTEXT: {module_context}"
         response = client.chat.completions.create(
             model=GROQ_MODEL,
             messages=[
-                {"role": "system", "content": system_instruction},
-                {"role": "user", "content": prompt_text}
+                {"role": "system", "content": system_content},
+                {"role": "user", "content": user_prompt}
             ],
             temperature=0.7,
-            max_tokens=1000
+            max_tokens=2000
         )
         return response.choices[0].message.content, None
     except Exception as e:
@@ -232,6 +211,33 @@ with st.sidebar:
         <h2 style="margin:0; font-size: 1.4rem;">PARAM VEER MATRIX</h2>
         <span style="color:#D4AF37; font-size:0.75rem; letter-spacing:1px;">UNIVERSAL ELEMENTAL DOCTRINE</span><br>
         <span style="color:#8a9a8c; font-size:0.7rem;">GOD's RECONNAISSANCE & COMBAT DOCTRINE MAPPED TO XXSFX-A</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ==========================================================================
+    # EMBOSSED GOLD BANNER FOR SPECIAL ELEMENTAL MAPPING TEXT
+    # ==========================================================================
+    st.markdown("""
+    <div style="
+        background: linear-gradient(145deg, #283629, #101711);
+        border: 2px solid #D4AF37;
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4), inset 0 0 10px rgba(212, 175, 55, 0.25);
+        text-align: center;
+    ">
+        <div style="
+            color: #D4AF37;
+            font-size: 0.82rem;
+            font-weight: 800;
+            line-height: 1.5;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px #000000, 0 0 8px rgba(212, 175, 55, 0.8);
+        ">
+            ⚡ GODS ELEMENTAL BATTLE OPERATING SYSTEMS OF SUN AND SKY, AIR, WATER, EARTH, FIRE, MOUNTAIN AND STORM MAPPED ONTO HUMAN WARFARE BATTLE OPERATING SYSTEMS ⚡
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -264,7 +270,7 @@ with st.sidebar:
     <div style="font-size: 0.75rem; color: #8a9a8c; text-align: center;">
         <b>Doctrine Origin:</b> Kolkata Genesis<br>
         <b>Strategic Roots:</b> Sanatan / Kurukshetra<br>
-        <b>Status:</b> Air-Gapped XXSFX-A Engine
+        <b>Status:</b> Universal Educational & Training Engine
     </div>
     """, unsafe_allow_html=True)
 
@@ -281,27 +287,21 @@ if os.path.exists(image_filename):
     with col_img2:
         img = Image.open(image_filename)
         st.image(img, use_container_width=True)
-else:
-    st.markdown(f"""
-    <div style="color: #D4AF37; font-style: italic; margin-bottom: 15px;">
-        [Notice: Upload '{image_filename}' into the repository directory to render the Krishna artwork directly here.]
-    </div>
-    """, unsafe_allow_html=True)
 
 st.markdown("""
     <h1 style="margin: 0; font-size: 2.2rem; text-transform: uppercase; color: #D4AF37;">THE DIVINE COMMANDING OFFICER AND C4ISR</h1>
     <p style="color: #00E5FF; margin-top: 8px; font-size: 1.05rem; font-weight: bold; letter-spacing: 1px;">
-        ⚡ Universal Elemental XXSFX-A Doctrine — Supreme Command, Control, Communications, Computers, Intelligence, Surveillance & Reconnaissance ⚡
+        ⚡ Universal Elemental XXSFX-A Doctrine — Training & Force Protection Educational Engine ⚡
     </p>
 </div>
 """, unsafe_allow_html=True)
 
-# Create 4 Overt Gold Tabs with horizontal touch-scrolling and full visibility
+# Create 4 Overt Gold Tabs
 tab1, tab2, tab3, tab4 = st.tabs([
     "🌐 TAB 1: 5D TACTICAL MATRIX",
     "🛡️ TAB 2: REVERSE 5D & BOS",
     "🔥 TAB 3: FIRE PARALLEL",
-    "⚔️ TAB 4: GOC EXEC BRIEF"
+    "⚔️ TAB 4: GOC EXEC BRIEF & GOD'S BOS MAPPING"
 ])
 
 # ==============================================================================
@@ -309,19 +309,19 @@ tab1, tab2, tab3, tab4 = st.tabs([
 # ==============================================================================
 with tab1:
     st.markdown("### MODULE 1: THE ELEMENTAL 5D STRATEGY (DETECT, DETER, DENY, DELIVER, DESTROY)")
-    st.write("Nature provides the ultimate unstoppable reconnaissance and surveillance architecture. The enemy cannot detect, deter, deny, deliver, or destroy the Sun, the River, the Wind, or the Earth. XXSFX-A operators map these natural behaviors to become invincible, fluid, and undetectable.")
+    st.write("Nature provides the ultimate unstoppable reconnaissance and surveillance architecture. Type any tactical, operational, or training query in any format below.")
 
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
-        <div class="gold-card-title">TAB 1 INTELLIGENCE QUERY & LOGIC ANALYSIS CONSOLE</div>
-        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific recon/surveillance parameters, infiltration requirements, or divine elemental focus below, then click **Execute Tab 1 Directive**:</p>
+        <div class="gold-card-title">TAB 1 UNIVERSAL INPUT CONSOLE (5D PARALLEL)</div>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Enter any query format (educational, operational, tactical, cross-border, defensive, or training directive):</p>
     </div>
     """, unsafe_allow_html=True)
     
     st.session_state.query_tab1 = st.text_area(
-        "Enter Tab 1 Recon & Surveillance Query:",
+        "Enter Tab 1 Query:",
         value=st.session_state.query_tab1,
-        placeholder="Type custom reconnaissance directives, sensor deployment plans, or baseline anomaly criteria here...",
+        placeholder="Type any operational or tactical query here (e.g., cross-border stealth recon, sensor coverage, defensive posture)...",
         key="t1_input",
         label_visibility="collapsed"
     )
@@ -332,17 +332,17 @@ with tab1:
 
     if tab1_submitted or st.session_state.query_tab1.strip():
         if st.session_state.query_tab1.strip():
-            with st.spinner(f"⚡ Processing directive via Groq API ({GROQ_MODEL})..."):
-                sys_prompt = "You are a military intelligence tactical engine operating under the Universal Elemental XXSFX-A Doctrine. Analyze the user's recon/surveillance query using 5D strategy (Detect, Deter, Deny, Deliver, Destroy). Provide structured tactical points."
-                user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nSelected Elements: {', '.join(st.session_state.selected_elements)}\nQuery: {st.session_state.query_tab1}"
+            with st.spinner(f"⚡ Processing 5D Divine Parallel Analysis via Groq ({GROQ_MODEL})..."):
+                mod_ctx = "Module 1 focus: 5D Strategy (Detect, Deter, Deny, Deliver, Destroy) mapped to Nature's Elemental Agents for educational purpose."
+                u_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nSelected Elements: {', '.join(st.session_state.selected_elements)}\nUser Query / Input: {st.session_state.query_tab1}"
                 
-                ai_result, err = run_groq_intelligence(sys_prompt, user_prompt)
+                ai_result, err = run_groq_intelligence(mod_ctx, u_prompt)
 
             if ai_result:
                 st.markdown(f"""
                 <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 GROQ DIVINE ELEMENTAL ANALYSIS ({GROQ_MODEL}):</div>
-                    <p><b>Directive Processed:</b> "{st.session_state.query_tab1}"</p>
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 1 DIVINE ELEMENTAL & 5D REPORT ({GROQ_MODEL}):</div>
+                    <p><b>Input Processed (Training Parallel):</b> "{st.session_state.query_tab1}"</p>
                     <div>{ai_result}</div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -355,85 +355,48 @@ with tab1:
         st.markdown("""
         <div class="gold-card">
             <div class="gold-card-title">1. DETECT (The Sun, Sky, & Air)</div>
-            <p><b>Natural Law:</b> The Sun and Sky see everything without searching—surveillance is their baseline. The Air moves silently through every crevice carrying acoustic and electromagnetic vibrations.</p>
-            <p><b>XXSFX-A Operator Tradecraft:</b> Establish continuous, passive situational awareness. Operators do not search actively; they observe deviations from the natural baseline.</p>
-            <p><b>Cross-Border Application:</b> Unblinking SIGINT/Acoustic monitoring along border corridors prior to ingress.</p>
-            <p><b>Decoding Enemy Intent:</b> Reading adversary shifts, radio silence anomalies, and supply movements against the natural ground truth.</p>
+            <p><b>Natural Law:</b> Sun and Sky see everything passively without searching. Air carries all acoustic and electromagnetic vibrations.</p>
+            <p><b>Training Parallel:</b> Establish passive situational awareness by observing natural baseline anomalies.</p>
         </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("""
         <div class="gold-card">
             <div class="gold-card-title">2. DETER (The Mountain & The Storm)</div>
-            <p><b>Natural Law:</b> The Mountain stands as an immovable wall; the impending Storm projects overwhelming psychological dominance that halts all movement.</p>
-            <p><b>XXSFX-A Operator Tradecraft:</b> Project lethal unpredictability. Transform terrain features into psychological barriers that break adversary confidence.</p>
-            <p><b>Cross-Border Application:</b> Funneling cross-border enemy movements into death zones and chokepoints using static geographical dominance.</p>
-            <p><b>Decoding Enemy Intent:</b> Inducing decision paralysis in enemy command structures before they cross the line of contact.</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("""
-        <div class="gold-card">
-            <div class="gold-card-title">3. DENY (The Earth & Water)</div>
-            <p><b>Natural Law:</b> The Earth absorbs and conceals quietly. Water fills voids, leaves no footprints, and washes away all tracks.</p>
-            <p><b>XXSFX-A Operator Tradecraft:</b> Total signature management—thermal, visual, digital, and acoustic invisibility. Sinking into terrain without leaving a trace.</p>
-            <p><b>Cross-Border Application:</b> Zero-footprint infiltration using dead zones, subterranean features, and drainage lines.</p>
-            <p><b>Decoding Enemy Intent:</b> Blinding enemy counter-surveillance assets by presenting zero physical or electronic targets.</p>
+            <p><b>Natural Law:</b> The Mountain is immovable; the Storm projects psychological dominance that halts enemy movement.</p>
+            <p><b>Training Parallel:</b> Transform terrain features into mental barriers to channel forces into defensive chokepoints.</p>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
         <div class="gold-card">
-            <div class="gold-card-title">4. DELIVER (The River & The Rain)</div>
-            <p><b>Natural Law:</b> Rain saturates every inch of land simultaneously; the River carves through rock, bypassing all obstacles to reach its destination unstoppable.</p>
-            <p><b>XXSFX-A Operator Tradecraft:</b> Fluid penetration along paths of least resistance, bypassing fortified checkpoints and integrating with local human terrain.</p>
-            <p><b>Cross-Border Application:</b> Saturating the operational area with small, autonomous stealth teams (The Rain) that converge at the decisive target node (The River).</p>
-            <p><b>Decoding Enemy Intent:</b> Delivering tailored kinetic or non-kinetic effects deep into the adversary's rear staging areas.</p>
+            <div class="gold-card-title">3. DENY (The Earth & Water)</div>
+            <p><b>Natural Law:</b> Earth conceals quietly; Water leaves no footprints and fills all voids.</p>
+            <p><b>Training Parallel:</b> Signature management—thermal, visual, digital, and acoustic zero-trace movement.</p>
         </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("""
         <div class="gold-card">
-            <div class="gold-card-title">5. DESTROY (Fire & Lightning)</div>
-            <p><b>Natural Law:</b> Lightning delivers massive concentrated energy at a precise point in milliseconds; Fire consumes all fuel leaving nothing behind.</p>
-            <p><b>XXSFX-A Operator Tradecraft:</b> Terminal guidance, high-value target decapitation, and immediate lethal violence of action.</p>
-            <p><b>Cross-Border Application:</b> Surgical direct action strikes that paralyze C2 infrastructure instantly.</p>
-            <p><b>Decoding Enemy Intent:</b> Complete neutralization of enemy intent at the cognitive and command levels.</p>
+            <div class="gold-card-title">4. DELIVER & DESTROY (River & Lightning)</div>
+            <p><b>Natural Law:</b> River carves through obstacles; Lightning delivers concentrated kinetic strikes in milliseconds.</p>
+            <p><b>Training Parallel:</b> Fluid penetration along paths of least resistance followed by instant neutralization.</p>
         </div>
         """, unsafe_allow_html=True)
-
-        st.markdown("<div class=\"gold-card\">", unsafe_allow_html=True)
-        st.markdown("<div class=\"gold-card-title\">INTERACTIVE RECON PATROL SIMULATOR</div>", unsafe_allow_html=True)
-        st.session_state.recon_scenario = st.text_area("Formulate XXSFX-A Patrol Operational Scenario:", value=st.session_state.recon_scenario, label_visibility="collapsed")
-        
-        if st.button("Generate Elemental Invincibility Analysis", key="btn_recon_sim"):
-            st.success("Elemental Mapping Generated:")
-            st.markdown(f"""
-            - 🌊 **River Pathing:** Infiltrate via drainage channels in sector **{st.session_state.target_sector}**.
-            - 💨 **Air Masking:** Synchronize movement with ambient acoustic noise during **{op_environment}** atmospheric shifts.
-            - ⛰️ **Earth/Mountain Armor:** Establish hide sites inside static subterranean geographic pockets.
-            """)
-        st.markdown("</div>", unsafe_allow_html=True)
 
 # ==============================================================================
 # TAB 2: REVERSE 5D & HIDDEN BOS INTELLIGENCE ARCHITECTURE
 # ==============================================================================
 with tab2:
-    st.markdown("### MODULE 2: REVERSE 5D ADVERSARY COUNTER-MATRIX & HIDDEN BATTLE OPERATING SYSTEMS (BOS)")
-    st.write("To defeat the adversary inside our borders or across hostile lines, XXSFX-A must map the enemy's Battle Operating Systems (BOS)—both visible and hidden—while deploying the Reverse 5D Counter-Matrix.")
+    st.markdown("### MODULE 2: REVERSE 5D COUNTER-MATRIX & HIDDEN BATTLE OPERATING SYSTEMS (BOS)")
+    st.write("Map visible and hidden Battle Operating Systems (BOS) using Nature's counter-elements. Enter any threat scenario or query in freeform text.")
 
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
-        <div class="gold-card-title">TAB 2 REVERSE 5D & BOS DETECTOR QUERY CONSOLE</div>
-        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific adversary BOS target, counter-detection requirement, or cross-border penetration challenge below, then click **Execute Tab 2 Directive**:</p>
+        <div class="gold-card-title">TAB 2 UNIVERSAL INPUT CONSOLE (REVERSE 5D & BOS)</div>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Enter any query format regarding adversary BOS, counter-surveillance, or defense:</p>
     </div>
     """, unsafe_allow_html=True)
     
     st.session_state.query_tab2 = st.text_area(
-        "Enter Tab 2 Reverse 5D & BOS Query:",
+        "Enter Tab 2 Query:",
         value=st.session_state.query_tab2,
-        placeholder="Type adversary radar/C2 targets, counter-surveillance parameters, or covert ingress criteria here...",
+        placeholder="Type any query regarding radar evasion, C2 counter-measures, hidden BOS detection, or border security...",
         key="t2_input",
         label_visibility="collapsed"
     )
@@ -444,17 +407,17 @@ with tab2:
 
     if tab2_submitted or st.session_state.query_tab2.strip():
         if st.session_state.query_tab2.strip():
-            with st.spinner(f"⚡ Processing directive via Groq API ({GROQ_MODEL})..."):
-                sys_prompt = "You are a military intelligence tactical engine specializing in Reverse 5D Counter-Matrix and Battle Operating Systems (BOS) neutralization. Provide precise counter-detection strategies."
-                user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nTarget BOS: {', '.join(st.session_state.detected_bos)}\nQuery: {st.session_state.query_tab2}"
+            with st.spinner(f"⚡ Processing Reverse 5D & BOS Analysis via Groq ({GROQ_MODEL})..."):
+                mod_ctx = "Module 2 focus: Reverse 5D Counter-Matrix and Battle Operating Systems (BOS) mapped to Nature's windows for educational purpose."
+                u_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nTarget BOS: {', '.join(st.session_state.detected_bos)}\nUser Query / Input: {st.session_state.query_tab2}"
                 
-                ai_result, err = run_groq_intelligence(sys_prompt, user_prompt)
+                ai_result, err = run_groq_intelligence(mod_ctx, u_prompt)
 
             if ai_result:
                 st.markdown(f"""
                 <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 GROQ REVERSE 5D & BOS ANALYSIS ({GROQ_MODEL}):</div>
-                    <p><b>Directive Processed:</b> "{st.session_state.query_tab2}"</p>
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 2 REVERSE 5D & BOS REPORT ({GROQ_MODEL}):</div>
+                    <p><b>Input Processed (Training Parallel):</b> "{st.session_state.query_tab2}"</p>
                     <div>{ai_result}</div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -469,28 +432,20 @@ with tab2:
             <div class="gold-card-title">REVERSE 5D ADVERSARY COUNTER-MATRIX</div>
             <table style="width:100%; color:#e0e6e1; border-collapse:collapse;">
                 <tr style="border-bottom:1px solid #D4AF37; text-align:left;">
-                    <th style="padding:6px; color:#D4AF37;">Enemy Move</th>
-                    <th style="padding:6px; color:#D4AF37;">Elemental Counter-Strategy</th>
+                    <th style="padding:6px; color:#D4AF37;">Adversary Action</th>
+                    <th style="padding:6px; color:#D4AF37;">Elemental Defensive Parallel</th>
                 </tr>
                 <tr style="border-bottom:1px solid #28382b;">
-                    <td style="padding:6px;"><b>Reverse DETECT</b><br>(Enemy searches for us)</td>
-                    <td style="padding:6px;"><b>Earth Cloaking:</b> Deep subterranean hides, thermal absorption, zero RF signature.</td>
+                    <td style="padding:6px;"><b>Adversary Search</b></td>
+                    <td style="padding:6px;"><b>Earth Cloaking:</b> Deep subterranean thermal and RF absorption.</td>
                 </tr>
                 <tr style="border-bottom:1px solid #28382b;">
-                    <td style="padding:6px;"><b>Reverse DETER</b><br>(Enemy builds barriers)</td>
-                    <td style="padding:6px;"><b>Water Infiltration:</b> Bypassing rigid fortifications through fluid movement and gaps.</td>
+                    <td style="padding:6px;"><b>Adversary Barrier</b></td>
+                    <td style="padding:6px;"><b>Water Flow:</b> Fluid bypass through unmonitored structural gaps.</td>
                 </tr>
                 <tr style="border-bottom:1px solid #28382b;">
-                    <td style="padding:6px;"><b>Reverse DENY</b><br>(Enemy blocks signals/routes)</td>
-                    <td style="padding:6px;"><b>Air Spectrum Exploitation:</b> Mesh networking, indigenous human networks, acoustic comms.</td>
-                </tr>
-                <tr style="border-bottom:1px solid #28382b;">
-                    <td style="padding:6px;"><b>Reverse DELIVER</b><br>(Enemy attacks our base)</td>
-                    <td style="padding:6px;"><b>Mountain Friction:</b> Channeling enemy forces into lethal chokepoints and minefields.</td>
-                </tr>
-                <tr>
-                    <td style="padding:6px;"><b>Reverse DESTROY</b><br>(Enemy launches strikes)</td>
-                    <td style="padding:6px;"><b>Lightning Redirection:</b> Presenting decoy targets and phantom electronic signatures.</td>
+                    <td style="padding:6px;"><b>Adversary Jamming</b></td>
+                    <td style="padding:6px;"><b>Air Modulation:</b> Mesh network adaptation & acoustic signals.</td>
                 </tr>
             </table>
         </div>
@@ -499,62 +454,34 @@ with tab2:
     with col_b:
         st.markdown("""
         <div class="gold-card">
-            <div class="gold-card-title">BATTLE OPERATING SYSTEMS (BOS) ELEMENTAL MAPPING</div>
+            <div class="gold-card-title">BOS ELEMENTAL MAPPING</div>
             <ul>
-                <li><b>Command & Control (C2) → Sun & Sky:</b> Total situational visibility paired with decentralized execution.</li>
-                <li><b>ISR & Target Acquisition → Air & Sky:</b> Multi-layered collection combining satellite imagery, ambient signals, and local HUMINT.</li>
-                <li><b>Mobility & Counter-Mobility → Water & Mountain:</b> Fluid movement along drainage basins; blocking enemy routes with terrain obstacles.</li>
-                <li><b>Firepower → Fire & Lightning:</b> Instant synchronization of kinetic strikes onto precise intelligence coordinates.</li>
-                <li><b>Counter-Intelligence / Counter-ISR → Earth & Mud:</b> Operating completely below the noise floor of adversary detection systems.</li>
-                <li><b>Tactics & Maneuver → River & Storm:</b> Infiltrating like groundwater, assembling like a river, striking like a storm.</li>
+                <li><b>C2 Command Nodes:</b> Sun & Sky (Universal visibility + decentralized command).</li>
+                <li><b>ISR / Radar:</b> Air & Acoustic spectrum tracking.</li>
+                <li><b>Mobility / Ingress:</b> River paths & subterranean Earth channels.</li>
+                <li><b>Firepower:</b> Lightning precision strike coordination.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="gold-card">
-        <div class="gold-card-title">HIDDEN BOS DISCOVERY & ATTACK WINDOW CALCULATOR</div>
-    """, unsafe_allow_html=True)
-    
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown("<span style='color:#D4AF37; font-weight:bold;'>Target Hidden BOS Type</span>", unsafe_allow_html=True)
-        bos_type = st.multiselect(
-            "Select Target BOS Elements",
-            ["C2 Command Nodes", "Early Warning Radar (ISR)", "Logistics & Fuel Reserves", "Mobility Obstacles / Minefields", "Air Defense / Firepower Assets", "Covert Counter-Intelligence Cells"],
-            default=["C2 Command Nodes", "Early Warning Radar (ISR)"]
-        )
-        st.session_state.detected_bos = bos_type
-    
-    with c2:
-        st.markdown("<span style='color:#D4AF37; font-weight:bold;'>Border Zone Domain</span>", unsafe_allow_html=True)
-        border_domain = st.radio("Location", ["Cross-Border Hostile Territory", "Internal Border Grid / Hidden Sleeper Cells"], key="border_domain_radio")
-    
-    with c3:
-        st.markdown("<span style='color:#D4AF37; font-weight:bold;'>Calculated Ingress/Egress Window</span>", unsafe_allow_html=True)
-        window = st.text_input("Optimal Time Window", value=st.session_state.ingress_window, key="ingress_window_input")
-        st.session_state.ingress_window = window
-
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ==============================================================================
 # TAB 3: THE FIRE PARALLEL & ELITE TRADECRAFT
 # ==============================================================================
 with tab3:
-    st.markdown("### MODULE 3: THE FIRE PARALLEL — ANATOMY OF THE ELITE XXSFX-A OPERATOR")
-    st.write("Fire creates immense light and heat through the deliberate, controlled consumption of its own body. An elite XXSFX-A operator burns their physical reserves, youth, and comfort to illuminate the dark and project force for the nation.")
+    st.markdown("### MODULE 3: THE FIRE PARALLEL — ANATOMY OF THE ELITE OPERATOR")
+    st.write("Fire creates light and energy by consuming its own wax and fuel. Soldiers spend physical reserves in silent duty for national protection. Enter any tradecraft or operational query below.")
 
     st.markdown("""
     <div class="gold-card" style="border: 2px dashed #D4AF37;">
-        <div class="gold-card-title">TAB 3 SF OPERATIONAL & EXFILTRATION QUERY CONSOLE</div>
-        <p style="font-size:0.85rem; color:#8a9a8c;">Type your specific SF operator tradecraft, human terrain integration, or exfiltration criteria below, then click **Execute Tab 3 Directive**:</p>
+        <div class="gold-card-title">TAB 3 UNIVERSAL INPUT CONSOLE (FIRE PARALLEL & TRADECRAFT)</div>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Enter any query regarding Special Forces tradecraft, human terrain, or exfiltration:</p>
     </div>
     """, unsafe_allow_html=True)
     
     st.session_state.query_tab3 = st.text_area(
-        "Enter Tab 3 SF Operational Query:",
+        "Enter Tab 3 Query:",
         value=st.session_state.query_tab3,
-        placeholder="Type cross-border exfiltration, human terrain alignment, or operator self-consumption parameters here...",
+        placeholder="Type any query regarding operator tradecraft, human terrain integration, or exfiltration protocols...",
         key="t3_input",
         label_visibility="collapsed"
     )
@@ -565,17 +492,17 @@ with tab3:
 
     if tab3_submitted or st.session_state.query_tab3.strip():
         if st.session_state.query_tab3.strip():
-            with st.spinner(f"⚡ Processing directive via Groq API ({GROQ_MODEL})..."):
-                sys_prompt = "You are a military intelligence advisor analyzing Special Forces tradecraft, human terrain integration, and exfiltration protocols under the Fire Parallel framework."
-                user_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nIngress Window: {st.session_state.ingress_window}\nQuery: {st.session_state.query_tab3}"
+            with st.spinner(f"⚡ Processing Fire Parallel & Tradecraft Analysis via Groq ({GROQ_MODEL})..."):
+                mod_ctx = "Module 3 focus: The Fire Parallel (Self-Consumption, Illumination, Heat, Extinction) and Human Terrain for educational purpose."
+                u_prompt = f"Operation: {st.session_state.op_name}\nTarget Sector: {st.session_state.target_sector}\nIngress Window: {st.session_state.ingress_window}\nUser Query / Input: {st.session_state.query_tab3}"
                 
-                ai_result, err = run_groq_intelligence(sys_prompt, user_prompt)
+                ai_result, err = run_groq_intelligence(mod_ctx, u_prompt)
 
             if ai_result:
                 st.markdown(f"""
                 <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
-                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 GROQ SF OPERATIONAL ANALYSIS ({GROQ_MODEL}):</div>
-                    <p><b>Directive Processed:</b> "{st.session_state.query_tab3}"</p>
+                    <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ TAB 3 FIRE PARALLEL REPORT ({GROQ_MODEL}):</div>
+                    <p><b>Input Processed (Training Parallel):</b> "{st.session_state.query_tab3}"</p>
                     <div>{ai_result}</div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -584,159 +511,238 @@ with tab3:
 
     st.markdown("""
     <div class="gold-card">
-        <div class="gold-card-title">THE 360-DEGREE FIRE PARALLEL FOR XXSFX-A</div>
+        <div class="gold-card-title">THE 4 PILLARS OF THE FIRE PARALLEL</div>
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
-            <div style="flex: 1; min-width: 220px; background: #1c261e; padding: 12px; border: 1px solid #D4AF37; border-radius: 5px;">
-                <h4 style="color:#D4AF37; margin-top:0;">1. LIGHT (Illumination)</h4>
-                <p style="font-size:0.85rem;"><b>Intelligence & ISR:</b> Fire dispels darkness without searching. The operator illuminates dark operational environments, providing strategic clarity on enemy intent and hidden threat structures.</p>
+            <div style="flex: 1; min-width: 200px; background: #1c261e; padding: 10px; border: 1px solid #D4AF37;">
+                <h4 style="color:#D4AF37; margin:0;">1. LIGHT</h4>
+                <p style="font-size:0.8rem;">Illuminating dark operational zones with passive intelligence.</p>
             </div>
-            <div style="flex: 1; min-width: 220px; background: #1c261e; padding: 12px; border: 1px solid #D4AF37; border-radius: 5px;">
-                <h4 style="color:#D4AF37; margin-top:0;">2. HEAT (Thermal Energy)</h4>
-                <p style="font-size:0.85rem;"><b>Direct Action & Lethality:</b> Heat transforms and destroys. The operator radiates concentrated kinetic energy at the decisive moment to break the adversary's capacity to resist.</p>
+            <div style="flex: 1; min-width: 200px; background: #1c261e; padding: 10px; border: 1px solid #D4AF37;">
+                <h4 style="color:#D4AF37; margin:0;">2. HEAT</h4>
+                <p style="font-size:0.8rem;">Direct action energy delivered at the decisive point.</p>
             </div>
-            <div style="flex: 1; min-width: 220px; background: #1c261e; padding: 12px; border: 1px solid #D4AF37; border-radius: 5px;">
-                <h4 style="color:#D4AF37; margin-top:0;">3. THE WICK (Self-Consumption)</h4>
-                <p style="font-size:0.85rem;"><b>Grit & Physical Capital:</b> Fire burns its own wood and wax. The operator spends their personal physical capital, longevity, and mental bandwidth in silent service.</p>
+            <div style="flex: 1; min-width: 200px; background: #1c261e; padding: 10px; border: 1px solid #D4AF37;">
+                <h4 style="color:#D4AF37; margin:0;">3. THE WICK</h4>
+                <p style="font-size:0.8rem;">Self-consumption of personal reserves for unit mission success.</p>
             </div>
-            <div style="flex: 1; min-width: 220px; background: #1c261e; padding: 12px; border: 1px solid #D4AF37; border-radius: 5px;">
-                <h4 style="color:#D4AF37; margin-top:0;">4. EXTINCTION (Vanishing)</h4>
-                <p style="font-size:0.85rem;"><b>Exfiltration & Stealth:</b> When the fuel is spent, fire leaves no permanent structure. Operators strike, accomplish the objective, and extinguish seamlessly into the landscape.</p>
+            <div style="flex: 1; min-width: 200px; background: #1c261e; padding: 10px; border: 1px solid #D4AF37;">
+                <h4 style="color:#D4AF37; margin:0;">4. EXTINCTION</h4>
+                <p style="font-size:0.8rem;">Silent exfiltration leaving zero physical or electronic trace.</p>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    col_x, col_y = st.columns([1, 1])
-    
-    with col_x:
-        st.markdown("""
-        <div class="gold-card">
-            <div class="gold-card-title">HUMAN TERRAIN INTEGRATION & INFILTRATION</div>
-            <p><b>Becoming the Water & Air among Local Populations:</b></p>
-            <ul>
-                <li><b>Cultural Alignment:</b> Adapting local dialects, customs, and daily rhythms so completely that the team vanishes into plain sight.</li>
-                <li><b>Exploiting Vulnerabilities:</b> Mapping local corruption, ideological rifts, and criminal networks to harvest human intelligence (HUMINT).</li>
-                <li><b>Zero Friction Egress:</b> Exfiltrating through civilian mobility corridors without alarming local security apparatuses.</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with col_y:
-        st.markdown("""
-        <div class="gold-card">
-            <div class="gold-card-title">THE SANATAN COMBAT ETHER — KURUKSHTRA DOCTRINE</div>
-            <p><i>"That which has no beginning and no end."</i></p>
-            <p style="font-size:0.9rem; color:#c0cac1;">
-                Indian combat wisdom originating on Indian soil in Kolkata draws directly from eternal universal principles. 
-                Just as Sanatan Dharma represents timeless cosmic truths, Indian XXSFX-A intelligence tradecraft operates 
-                on principles that cannot be bounded, decayed, or neutralized by adversary technology.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
 # ==============================================================================
-# TAB 4: COMMANDER-IN-CHIEF EXECUTIVE STRATEGIC BRIEFING & LIVE QUERY FEED
+# TAB 4: COMMANDER-IN-CHIEF EXECUTIVE STRATEGIC BRIEFING & GOD'S WARFARE / BOS MAPPING
 # ==============================================================================
 with tab4:
-    st.markdown("### MODULE 4: EXECUTIVE STRATEGIC BRIEFING & SEALED INTELLIGENCE SUMMARY")
-    st.write("This tab aggregates all inputs, selections, scenario analyses, and live queries from Tabs 1, 2, and 3 into a sealed, complete intelligence and divine battlefield summary for the GOC.")
+    st.markdown("### MODULE 4: EXECUTIVE STRATEGIC BRIEFING & GOD'S WARFARE / BOS FULL MAPPING REPORT")
+    st.write("Complete functional report capability mapping **God's Elemental Battle Operating Systems (Sun/Sky, Air, Water, Earth, Fire, Mountain, Storm)** directly onto **Human Warfare & Human Battle Operating Systems (BOS)** for educational and military training purposes.")
 
-    t1_filled = bool(st.session_state.query_tab1.strip())
-    t2_filled = bool(st.session_state.query_tab2.strip())
-    t3_filled = bool(st.session_state.query_tab3.strip())
+    st.markdown("""
+    <div class="gold-card" style="border: 2px dashed #D4AF37;">
+        <div class="gold-card-title">TAB 4 UNIVERSAL EXECUTIVE CONSOLE (GOC DIRECTIVE & GOD'S BOS SYNTHESIS)</div>
+        <p style="font-size:0.85rem; color:#8a9a8c;">Type any strategic query or click Execute to synthesize available intelligence into full paragraph and tabular reports mapping God's Warfare to Human BOS:</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    if not (t1_filled and t2_filled and t3_filled):
-        st.markdown("""
-        <div class="gold-card" style="border: 2px solid #D4AF37; text-align: center; background: #161e17; padding: 30px;">
-            <h3 style="color: #D4AF37; margin-top:0;">🔒 SEALED BRIEFING Awaiting Prior Inputs</h3>
-            <p style="color: #e0e6e1; font-size: 1.05rem;">
-                The GOC Executive Summary and Sealed Intelligence Brief remain locked until <b>all three query boxes</b> in Tabs 1, 2, and 3 are filled with operational directives.
-            </p>
-            <p style="color: #00E5FF; font-size: 0.9rem;">
-                <b>Current Status:</b><br>
-                • Tab 1 Query: {}<br>
-                • Tab 2 Query: {}<br>
-                • Tab 3 Query: {}
-            </p>
+    st.session_state.query_tab4 = st.text_area(
+        "Enter Tab 4 Executive Directive:",
+        value=st.session_state.query_tab4,
+        placeholder="Type custom strategic summary requirements, force protection directives, or leave blank to synthesize current tabs and generate God's BOS report...",
+        key="t4_input",
+        label_visibility="collapsed"
+    )
+
+    col_btn4, col_space4 = st.columns([1, 3])
+    with col_btn4:
+        tab4_submitted = st.button("🚀 Execute GOC Executive Brief", key="btn_t4")
+
+    if tab4_submitted or st.session_state.query_tab4.strip():
+        with st.spinner(f"⚡ Generating Executive Parallel Report & God's BOS Mapping via Groq ({GROQ_MODEL})..."):
+            mod_ctx = "Module 4 focus: Executive GOC Strategic Synthesis & Complete Mapping Report of God's Warfare and God's Elemental BOS (Sun/Sky, Air, Water, Earth, Fire, Mountain, Storm) onto Human Warfare and Human BOS for educational and training purposes."
+            
+            combined_queries = f"""
+            Executive Directive / Query: {st.session_state.query_tab4}
+            Tab 1 Input: {st.session_state.query_tab1}
+            Tab 2 Input: {st.session_state.query_tab2}
+            Tab 3 Input: {st.session_state.query_tab3}
+            Operation Codename: {st.session_state.op_name}
+            Sector: {st.session_state.target_sector}
+            Active Elements: {', '.join(st.session_state.selected_elements)}
+            Target BOS: {', '.join(st.session_state.detected_bos)}
+            
+            REQUIREMENT: Include an explicit breakdown mapping God's Elemental BOS (Sun/Sky, Air, Water, Earth, Fire, Mountain, Storm) to Human Warfare BOS (C2, ISR, Fire Support, Maneuver, Mobility/Counter-Mobility, Air Defense, Force Protection).
+            """
+            
+            ai_result, err = run_groq_intelligence(mod_ctx, combined_queries)
+
+        if ai_result:
+            st.markdown(f"""
+            <div class="gold-card" style="background: #121c15; border: 1px solid #00E5FF; margin-top: 15px;">
+                <div style="color: #00E5FF; font-weight: bold; margin-bottom: 6px;">⚡ GOC EXECUTIVE BRIEFING & GOD'S WARFARE BOS SYNTHESIS ({GROQ_MODEL}):</div>
+                <div>{ai_result}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.warning(err)
+
+    # ==========================================================================
+    # COMPLETE FUNCTIONAL REPORT CAPABILITY: GOD'S WARFARE vs HUMAN WARFARE & BOS
+    # ==========================================================================
+    st.markdown("""
+    <div class="gold-card" style="background-color: #0e140f; border: 2px solid #D4AF37; margin-top: 25px;">
+        <div style="text-align: center; border-bottom: 2px solid #D4AF37; padding-bottom: 12px; margin-bottom: 18px;">
+            <h2 style="margin:0; font-size: 1.5rem; color:#D4AF37;">FUNCTIONAL REPORT: GOD'S WARFARE & GOD'S BOS MAPPED TO HUMAN WARFARE</h2>
+            <h3 style="margin:5px 0; font-size: 1.05rem; color:#00E5FF;">EDUCATIONAL & MILITARY TRAINING DOCTRINAL COMPENDIUM</h3>
+            <span style="color:#8a9a8c; font-size:0.8rem;">FRAMEWORK: UNIVERSAL ELEMENTAL XXSFX-A | PURPOSE: FORCE PROTECTION & DEFENSIVE PREPAREDNESS</span>
         </div>
-        """.format(
-            "✅ Provided" if t1_filled else "❌ Pending (Blank)",
-            "✅ Provided" if t2_filled else "❌ Pending (Blank)",
-            "✅ Provided" if t3_filled else "❌ Pending (Blank)"
-        ), unsafe_allow_html=True)
-    else:
-        brief_date = datetime.now().strftime("%Y-%m-%d %H:%M IST")
         
-        st.markdown(f"""
-        <div class="gold-card" style="background-color: #0e140f; border: 2px solid #D4AF37;">
-            <div style="text-align: center; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 15px;">
-                <h2 style="margin:0; font-size: 1.5rem; color:#D4AF37;">CONFIDENTIAL / SEALED INTELLIGENCE SUMMARY</h2>
-                <h3 style="margin:5px 0; font-size: 1.1rem; color:#e0e6e1;">TOP SECRET DIVINE BATTLEFIELD MEMORANDUM FOR THE GOC</h3>
-                <span style="color:#8a9a8c; font-size:0.8rem;">DATE/TIME OF SYNTHESIS: {brief_date} | LOCATION: HQ SPECIAL OPERATIONS (KOLKATA GENESIS)</span>
-            </div>
-            
-            <p><b>1. SUBJECT:</b> Sealed Master Intelligence Summary & Cross-Border Operational Synthesis for {st.session_state.op_name}.</p>
-            
-            <p><b>2. TARGET SECTOR & ENVIRONMENT:</b> <span style="color:#D4AF37;">{st.session_state.target_sector}</span> ({op_environment} | Threat: {threat_level})</p>
-            
-            <p><b>3. AGGREGATED LIVE QUERIES FROM TABS 1, 2, & 3:</b></p>
-            <ul>
-                <li><b>Tab 1 (Recon & Surveillance Directive):</b> "{st.session_state.query_tab1}"</li>
-                <li><b>Tab 2 (Reverse 5D & BOS Directive):</b> "{st.session_state.query_tab2}"</li>
-                <li><b>Tab 3 (SF Operational & Exfiltration Directive):</b> "{st.session_state.query_tab3}"</li>
-            </ul>
-            
-            <p><b>4. DEPLOYED NATURAL RECON & SURVEILLANCE AGENTS:</b></p>
-            <ul>
-                {"".join([f"<li><b>{elem}</b></li>" for elem in st.session_state.selected_elements])}
-            </ul>
-            
-            <p><b>5. 5D & REVERSE 5D TACTICAL SYNTHESIS:</b></p>
-            <ul>
-                <li><b>Detect / Counter-Detect:</b> Employing Sun/Sky overhead baseline tracking paired with Earth-based subterranean thermal cloaking.</li>
-                <li><b>Deter / Counter-Deter:</b> Utilizing Mountain geographic bottlenecks to channel adversary movement while bypassing enemy bastions as Water.</li>
-                <li><b>Deny / Counter-Deny:</b> Exploiting Air acoustic/SIGINT channels while blinding adversary counter-surveillance assets.</li>
-                <li><b>Deliver & Destroy:</b> Infiltrating deep via River corridors during window <b>{st.session_state.ingress_window}</b> for Fire/Lightning decapitation strikes on targeted adversary BOS nodes (<b>{', '.join(st.session_state.detected_bos)}</b>).</li>
-            </ul>
-            
-            <p><b>6. COMPLETE INGRESS, EGRESS & EXFILTRATION PROTOCOL:</b></p>
-            <p style="background: #161e17; padding: 10px; border-left: 3px solid #00E5FF; font-size: 0.9rem;">
-                <b>Ingress:</b> Zero-footprint subterranean earth masking combined with river drainage lines.<br>
-                <b>Execution:</b> Decisive lightning strike on enemy C2/ISR nodes.<br>
-                <b>Egress & Exfiltration:</b> Silent dissolution through civilian human terrain and atmospheric acoustic masking, leaving zero residue.
-            </p>
-            
-            <p><b>7. DIVINE BATTLEFIELD COMMANDER'S CONCLUSION:</b></p>
-            <p style="font-size: 0.9rem;">
-                The XXSFX-A detachment operates as an unyielding manifestation of natural law. By fusing live tactical directives from all three operational sectors, the force achieves absolute operational invisibility, total adversary BOS paralysis, and seamless exfiltration.
-            </p>
-            
-            <div style="margin-top:20px; border-top: 1px solid #D4AF37; padding-top: 10px; text-align: right; font-size:0.80rem; color:#8a9a8c;">
-                <b>AUTHENTICATED BY:</b> XXSFX-A SUPREME COMMAND CELL
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        <p style="color:#e0e6e1; line-height: 1.6;">
+            <b>Conceptual Doctrine Overview:</b> In human warfare, Battle Operating Systems (BOS) coordinate Command & Control (C2), Intelligence (ISR), Fire Support, Maneuver, Mobility/Counter-Mobility, Air Defense, and Force Protection. God's Elemental Battle Operating Systems operate continuously through nature. By mapping natural forces to military doctrine for educational analysis, tactical leaders learn to leverage baseline physical realities to achieve superior defensive posture, zero-trace infiltration, and resilient command structures.
+        </p>
 
-        brief_text = f"""TOP SECRET SEALED INTELLIGENCE SUMMARY FOR THE GOC
+        <div style="margin-top:20px; margin-bottom:10px;">
+            <h4 style="color:#D4AF37; border-bottom: 1px solid #D4AF37; padding-bottom:4px;">1. GOD'S ELEMENTAL BOS VS. HUMAN WARFARE BOS MATRIX</h4>
+        </div>
+
+        <table style="width:100%; color:#e0e6e1; border-collapse:collapse; margin-bottom:20px; border:1px solid #D4AF37;">
+            <thead>
+                <tr style="background-color:#1c281e; border-bottom:2px solid #D4AF37; text-align:left;">
+                    <th style="padding:10px; color:#D4AF37; border-right:1px solid #3a4d3c;">God's Elemental BOS</th>
+                    <th style="padding:10px; color:#D4AF37; border-right:1px solid #3a4d3c;">Human Warfare BOS Equivalent</th>
+                    <th style="padding:10px; color:#D4AF37; border-right:1px solid #3a4d3c;">God's Operational Mechanism</th>
+                    <th style="padding:10px; color:#D4AF37;">Human Tactical Application & Training Objective</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom:1px solid #28382b;">
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>1. Sun & Sky</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>Command & Control (C2) / Space-Based ISR</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;">Omnipresent, passive persistent illumination without active probing.</td>
+                    <td style="padding:8px;">Decentralized C2 operational vision; continuous baseline observation without revealing sensor locations.</td>
+                </tr>
+                <tr style="border-bottom:1px solid #28382b; background-color:#121813;">
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>2. Air</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>SIGINT / EW / Communications Medium</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;">Carries invisible wave spectra, acoustic vibrations, and thermal differentials.</td>
+                    <td style="padding:8px;">Spectrum awareness, non-line-of-sight signal propagation, and acoustic threat detection in high-risk zones.</td>
+                </tr>
+                <tr style="border-bottom:1px solid #28382b;">
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>3. Water & River</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>Maneuver / Ingress & Infiltration Logistics</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;">Adapts to container shape, carves paths through hardest rock, leaves zero footprint.</td>
+                    <td style="padding:8px;">Fluid mobility tactics along unmonitored geographic fissures; zero-trace stealth insertion and logistics.</td>
+                </tr>
+                <tr style="border-bottom:1px solid #28382b; background-color:#121813;">
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>4. Earth</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>Survivability / Mobility-Counter-Mobility / Concealment</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;">Absorbs kinetic impact, dampens RF signals, hides assets subterraneanly.</td>
+                    <td style="padding:8px;">Subterranean fortification, thermal absorption masking, and physical grounding against thermal/spectral detection.</td>
+                </tr>
+                <tr style="border-bottom:1px solid #28382b;">
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>5. Fire</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>Elite Force Tradecraft / Self-Consumption / Lethality</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;">Generates light and energy by consuming its own internal fuel source.</td>
+                    <td style="padding:8px;">Operator tradecraft: personal endurance expenditure, intense decisive action, followed by silent exfiltration/extinction.</td>
+                </tr>
+                <tr style="border-bottom:1px solid #28382b; background-color:#121813;">
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>6. Mountain</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>Force Protection / Static Defense / Air Defense Anvil</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;">Immovable posture that forces adversary movement into predictable channels.</td>
+                    <td style="padding:8px;">Hardened perimeter defenses, terrain channelization, and creation of insurmountable defensive barriers.</td>
+                </tr>
+                <tr style="border-bottom:1px solid #28382b;">
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>7. Storm & Lightning</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;"><b>Precision Kinetic Strike / Deep Fire Support</b></td>
+                    <td style="padding:8px; border-right:1px solid #28382b;">Concentrates maximum energy into millisecond precision releases accompanied by acoustic suppression.</td>
+                    <td style="padding:8px;">Concentrated strike coordination; rapid kinetic engagement synchronized with environmental shock and awe.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top:20px; margin-bottom:10px;">
+            <h4 style="color:#D4AF37; border-bottom: 1px solid #D4AF37; padding-bottom:4px;">2. ANALYTICAL BREAKDOWN: GOD'S WARFARE DOCTRINE IN HUMAN DECISION FRAMES</h4>
+        </div>
+
+        <p style="color:#e0e6e1; line-height: 1.6;">
+            <b>A. The Detection Paradigm (Sun & Air vs ISR):</b> God's warfare relies on omnipresent natural baselines. Rather than emitting high-signature radar pulses (which expose human nodes), elite units operate like the Air and Sky—listening passively to anomalous disturbances in human terrain, ambient sound, and electromagnetic noise.
+        </p>
+
+        <p style="color:#e0e6e1; line-height: 1.6;">
+            <b>B. The Fluid Bypass Principle (Water vs Maneuver):</b> Direct frontal assaults against prepared human positions result in attrition. God's Water BOS teaches that force should flow around points of resistance, exploiting the natural contours of physical and structural seams to reach high-value targets without early engagement.
+        </p>
+
+        <p style="color:#e0e6e1; line-height: 1.6;">
+            <b>C. The Self-Consuming Fire Principle (Operator Duty):</b> Human operators in high-risk zones embody Fire. The flame requires fuel (physical stamina, tactical discipline, emotional restraint). Success depends on burning brightly and decisively at the target area while maintaining disciplined control to extinguish all electronic and visual traces during egress.
+        </p>
+
+        <div style="margin-top:25px; border-top: 1px solid #D4AF37; padding-top: 12px; text-align: right; font-size:0.80rem; color:#8a9a8c;">
+            <b>CLASSIFICATION:</b> MILITARY EDUCATIONAL & TRAINING USE ONLY | XXSFX-A UNIVERSAL SYNTHESIS
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # General Dynamic Summary Render (Always Available)
+    brief_date = datetime.now().strftime("%Y-%m-%d %H:%M IST")
+    st.markdown(f"""
+    <div class="gold-card" style="background-color: #0e140f; border: 2px solid #D4AF37; margin-top: 20px;">
+        <div style="text-align: center; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 15px;">
+            <h2 style="margin:0; font-size: 1.5rem; color:#D4AF37;">CONFIDENTIAL / EXECUTIVE TRAINING SUMMARY</h2>
+            <h3 style="margin:5px 0; font-size: 1.1rem; color:#e0e6e1;">DIVINE BATTLEFIELD MEMORANDUM FOR THE COMMANDER</h3>
+            <span style="color:#8a9a8c; font-size:0.8rem;">DATE/TIME: {brief_date} | LOCATION: HQ SPECIAL OPERATIONS (KOLKATA GENESIS)</span>
+        </div>
+        
+        <p><b>1. OPERATION CODENAME:</b> {st.session_state.op_name}</p>
+        <p><b>2. TARGET SECTOR:</b> <span style="color:#D4AF37;">{st.session_state.target_sector}</span> ({op_environment} | Threat: {threat_level})</p>
+        
+        <p><b>3. ACTIVE ELEMENTAL AGENTS DEPLOYED:</b></p>
+        <ul>
+            {"".join([f"<li><b>{elem}</b></li>" for elem in st.session_state.selected_elements])}
+        </ul>
+        
+        <p><b>4. RECORDED INPUT DIRECTIVES:</b></p>
+        <ul>
+            <li><b>Tab 1 (5D Directive):</b> "{st.session_state.query_tab1 if st.session_state.query_tab1 else 'Standard Baseline'}"</li>
+            <li><b>Tab 2 (Reverse 5D & BOS):</b> "{st.session_state.query_tab2 if st.session_state.query_tab2 else 'Standard Baseline'}"</li>
+            <li><b>Tab 3 (Tradecraft & Fire Parallel):</b> "{st.session_state.query_tab3 if st.session_state.query_tab3 else 'Standard Baseline'}"</li>
+            <li><b>Tab 4 (Executive Directive):</b> "{st.session_state.query_tab4 if st.session_state.query_tab4 else 'Standard Baseline'}"</li>
+        </ul>
+        
+        <div style="margin-top:20px; border-top: 1px solid #D4AF37; padding-top: 10px; text-align: right; font-size:0.80rem; color:#8a9a8c;">
+            <b>AUTHENTICATED BY:</b> XXSFX-A UNIVERSAL COMMAND CELL (EDUCATIONAL PURPOSE)
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    summary_text = f"""TOP SECRET EXECUTIVE TRAINING SUMMARY & GOD'S BOS MAPPING REPORT
 OPERATION: {st.session_state.op_name}
 SECTOR: {st.session_state.target_sector}
 DATE: {brief_date}
+PURPOSE: MILITARY EDUCATIONAL & FORCE PROTECTION TRAINING
 
-LIVE OPERATIONAL DIRECTIVES:
-- Tab 1 Recon Query: {st.session_state.query_tab1}
-- Tab 2 BOS Query: {st.session_state.query_tab2}
-- Tab 3 SF/Exfil Query: {st.session_state.query_tab3}
+TAB 1 DIRECTIVE: {st.session_state.query_tab1}
+TAB 2 DIRECTIVE: {st.session_state.query_tab2}
+TAB 3 DIRECTIVE: {st.session_state.query_tab3}
+TAB 4 DIRECTIVE: {st.session_state.query_tab4}
 
-ELEMENTAL AGENTS: {', '.join(st.session_state.selected_elements)}
+GOD'S ELEMENTAL BOS MAPPED TO HUMAN WARFARE BOS:
+1. Sun & Sky -> Command & Control (C2) / Space-Based ISR
+2. Air -> SIGINT / EW / Communications Medium
+3. Water & River -> Maneuver / Fluid Ingress & Infiltration Logistics
+4. Earth -> Survivability / Concealment / Thermal Grounding
+5. Fire -> Elite Tradecraft / Self-Consumption / Lethality
+6. Mountain -> Force Protection / Static Defense / Air Defense Anvil
+7. Storm & Lightning -> Precision Kinetic Strike / Deep Fire Support
+
+ACTIVE ELEMENTAL AGENTS: {', '.join(st.session_state.selected_elements)}
 TARGET BOS: {', '.join(st.session_state.detected_bos)}
-INGRESS/EGRESS WINDOW: {st.session_state.ingress_window}
-
-SUMMARY:
-Complete divine battlefield synthesis successfully generated. All ingress, egress, and reverse 5D protocols locked and verified.
+INGRESS WINDOW: {st.session_state.ingress_window}
 """
-        st.download_button(
-            label="📄 Download Sealed GOC Intelligence Summary (.txt)",
-            data=brief_text,
-            file_name=f"Sealed_GOC_Intelligence_Summary_{st.session_state.op_name.replace(' ', '_')}.txt",
-            mime="text/plain"
-        )
+    st.download_button(
+        label="📄 Download Executive Training Summary & God's BOS Report (.txt)",
+        data=summary_text,
+        file_name=f"Executive_Training_Summary_{st.session_state.op_name.replace(' ', '_')}.txt",
+        mime="text/plain"
+    )
