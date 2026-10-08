@@ -124,8 +124,54 @@ st.markdown("""
         color: #0b0e0c;
         box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
     }
+    
+    /* Sidebar Logo Framing */
+    .sidebar-logo-container {
+        text-align: center;
+        margin-bottom: 12px;
+        padding: 5px;
+        border: 1px solid #D4AF37;
+        border-radius: 6px;
+        background-color: #0e140f;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# ==============================================================================
+# IMAGE CROPPING HELPER FUNCTION (CENTER EMBLEM LOGO)
+# ==============================================================================
+def get_cropped_sidebar_logo():
+    """
+    Locates the source image file, crops out all outer black bars, browser margins,
+    and UI boundaries, isolating only the central gold-framed Divine artwork to use as
+    the side panel emblem.
+    """
+    candidate_files = ["1222726691967851057.jpeg", "ccd1850d-bc01-443b-8bd2-e877d94fceb1.jpg"]
+    target_file = None
+    
+    for fname in candidate_files:
+        if os.path.exists(fname):
+            target_file = fname
+            break
+            
+    if not target_file:
+        return None
+
+    try:
+        img = Image.open(target_file)
+        w, h = img.size
+        
+        # Crop coordinates bounding box to isolate the center artwork frame:
+        # Left: 31.8%, Top: 14.2%, Right: 81.2%, Bottom: 93.2%
+        left = int(w * 0.318)
+        top = int(h * 0.142)
+        right = int(w * 0.812)
+        bottom = int(h * 0.932)
+        
+        cropped_img = img.crop((left, top, right, bottom))
+        return cropped_img
+    except Exception:
+        return None
 
 # ==============================================================================
 # 2. SESSION STATE INITIALIZATION
@@ -205,9 +251,14 @@ def run_groq_intelligence(module_context: str, user_prompt: str):
         return None, f"⚠️ **Groq API Execution Error:** {str(e)}"
 
 # ==============================================================================
-# 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX
+# 3. SIDEBAR: TACTICAL CONTROL PANEL & COMMAND MATRIX (WITH CROPPED LOGO)
 # ==============================================================================
 with st.sidebar:
+    # Display Cropped Divine Center Emblem in the Side Panel Header
+    cropped_logo = get_cropped_sidebar_logo()
+    if cropped_logo is not None:
+        st.image(cropped_logo, use_container_width=True)
+
     st.markdown("""
     <div style="text-align: center; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 15px;">
         <h2 style="margin:0; font-size: 1.4rem;">PARAM VEER MATRIX</h2>
