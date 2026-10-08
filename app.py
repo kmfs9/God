@@ -902,4 +902,52 @@ with tab5:
     # 360-Degree Fire Matrix Table
     st.markdown("#### 🔥 The 360-Degree Fire Parallel: Anatomy of the Elite Operator")
     fire_doc_df = pd.DataFrame({
-        "Fire Element Aspect": ["1. Light (Illumination)", "2. Heat (Thermal Energy)", "3. Fuel / Wick (Consumption)", "4. Extinction (Vanishing)"],
+        "Fire Element Aspect": [
+            "1. Light (Illumination)", 
+            "2. Heat (Thermal Energy)", 
+            "3. Fuel / Wick (Consumption)", 
+            "4. Extinction (Vanishing)"
+        ],
+        "Natural Physical Law": [
+            "Visual radiance illuminating the surrounding terrain, exposing hidden structures.",
+            "High-temperature thermal energy capable of altering physical states and destroying matter.",
+            "The physical mass consumed to sustain the oxidation reaction of the fire.",
+            "The rapid cessation of combustion, resulting in smoke dissipation and darkness."
+        ],
+        "Special Forces Operational Tradecraft": [
+            "Intelligence, Vision & Reconnaissance: Mapping enemy baseline and target identification.",
+            "Direct Action & Kinetic Lethality: Delivering decisive, violent force to collapse nodes.",
+            "Physical Capital & Mental Grit: Burning internal energy reserves to sustain long-range ops.",
+            "Stealth, Exfiltration & Legacy: Leaving zero footprint, vanishing into ambient shadows."
+        ]
+    })
+    st.table(fire_doc_df)
+
+    # Narrative Tale 3
+    st.markdown("""
+    <div class="gold-card" style="border-left: 5px solid #D4AF37; background: #121813;">
+        <h4 style="margin-top:0; color:#D4AF37;">📖 STRATEGIC TALE III: THE GHOST STRIKE AT DAWN</h4>
+        <p style="font-style: italic; line-height: 1.6; color:#e0e6e1;">
+            At 0300 hours, an elite Special Forces assault element approached an enemy radar relay station perched on a cliffside. 
+            They used the blinding glare of the rising sun behind them to obscure the view of the sentinel guards (Solar Exploitation). 
+            Moving only when gusts of wind rattled the surrounding tree canopy (Wind Mimicry), they breached the perimeter undetected. 
+            At 0415 hours, they unleashed a 45-second concentrated kinetic strike that completely consumed the radar station (Heat & Lightning). 
+            By 0420 hours, before enemy quick reaction forces could scramble, the assault element had melted into subterranean drainage caverns (Earth Grounding & Extinction), 
+            leaving the enemy commander staring at burning wreckage with no trace of who had struck.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Final Summary Banner
+    st.markdown("""
+    <div class="gold-card" style="text-align: center; border: 2px solid #D4AF37; background: linear-gradient(180deg, #1c281e 0%, #0b0e0c 100%);">
+        <h3 style="color:#D4AF37; margin-bottom: 10px;">DIVINE WARFARE DOCTRINE SYNTHESIS COMPLETE</h3>
+        <p style="color:#e0e6e1; line-height: 1.6; max-width: 900px; margin: 0 auto;">
+            "By embedding Special Forces tactics into the immutable laws of nature, the force achieves total operational omnipresence, 
+            absolute situational awareness, zero signature latency, and unhindered execution across any human terrain on Earth."
+        </p>
+        <div style="margin-top: 15px; font-size: 0.85rem; color: #8a9a8c;">
+            <b>AUTHENTICATED BY:</b> XXSFX-A UNIVERSAL COMMAND CELL | DIVINE MATRIX ENGINE
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
