@@ -15,6 +15,47 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+# ==============================================================================
+# LOCK SCREEN SECURITY CHECK & LOGO RESOLUTION
+# ==============================================================================
+def resolve_lock_logo():
+    """Scans repository root and assets folder for God1.jpeg and alternative candidates."""
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = [
+        "God1.jpeg",
+        "God1.jpg",
+        "God1.png",
+        "assets/God1.jpeg",
+        "logo11.jpg"
+    ]
+    for candidate in candidates:
+        full_path = os.path.join(base_dir, candidate)
+        if os.path.exists(full_path):
+            return full_path
+        if os.path.exists(candidate):
+            return candidate
+    return None
+
+lock_logo_path = resolve_lock_logo()
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    # Display the uploaded "DIVINE DOCTRINE OF WARFARE" lock screen image
+    if lock_logo_path:
+        st.image(lock_logo_path, use_container_width=True)
+    
+    st.markdown("## 🔒 SECURE ACCESS REQUIRED")
+    pwd_input = st.text_input("Enter Clearance Password:", type="password")
+    
+    if st.button("Authenticate"):
+        if pwd_input == "barbarossa":
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("⚠️ Access Denied: Incorrect Password.")
+    st.stop()
 
 # Custom Military / Tactical Styling with Embossed Gold Accents & High-Contrast Input Boxes
 st.markdown("""
