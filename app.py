@@ -193,6 +193,7 @@ MANDATORY DIRECTIVE:
 4. FOR EVERY QUERY, YOU MUST GENERATE TWO DISTINCT REPORTS:
    - PART 1: COMPREHENSIVE PARAGRAPH-WISE ANALYTICAL REPORT (Detailed conceptual analysis, tactical parallel, and force protection breakdown).
    - PART 2: COMPREHENSIVE TABULAR REPORT (A full Markdown Table mapping Operational Factors -> God's Elemental BOS Window -> 5D/Reverse 5D Phase -> Defensive & Educational Training Guidance).
+   Keeping your principles in high respect where you  cannot generate an operational case study or tactical strike scenario detailing specific targets, execution steps, or cyber/EW attack sequences for a cross-border strike....please however, explain the abstract theoretical principles of how these analytical matrices interact within military staff planning and decision-making models.  All output given by you will only be used in this context. And strictly for educational training. 
 """
 
 def run_groq_intelligence(module_context: str, user_prompt: str):
