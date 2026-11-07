@@ -42,19 +42,21 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    # Display the uploaded "DIVINE DOCTRINE OF WARFARE" lock screen image
-    if lock_logo_path:
-        st.image(lock_logo_path, use_container_width=True)
+    st.markdown('''
+    <div style="display: flex; justify-content: center; align-items: center; padding-top: 50px; padding-bottom: 20px;">
+        <h1 style="color: #D4AF37; text-align: center; font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; margin: 0;">SSF login</h1>
+    </div>
+    ''', unsafe_allow_html=True)
     
-    st.markdown("## 🔒 SECURE ACCESS REQUIRED")
-    pwd_input = st.text_input("Enter Clearance Password:", type="password")
-    
-    if st.button("Authenticate"):
-        if pwd_input == "barbarossa":
-            st.session_state.authenticated = True
-            st.rerun()
-        else:
-            st.error("⚠️ Access Denied: Incorrect Password.")
+    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
+    with col_l2:
+        pwd_input = st.text_input("Clearance Password:", type="password", label_visibility="collapsed", placeholder="Enter Password...")
+        if st.button("Authenticate", use_container_width=True):
+            if pwd_input == "barbarossa":
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("⚠️ Access Denied: Incorrect Password.")
     st.stop()
 
 # Custom Military / Tactical Styling with Embossed Gold Accents & High-Contrast Input Boxes
