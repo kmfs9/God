@@ -52,7 +52,7 @@ if not st.session_state.authenticated:
     with col_l2:
         pwd_input = st.text_input("Clearance Password:", type="password", label_visibility="collapsed", placeholder="Enter Password...")
         if st.button("Authenticate", use_container_width=True):
-            if pwd_input == "barbarossa":
+            if pwd_input == "bbarbarossa":
                 st.session_state.authenticated = True
                 st.rerun()
             else:
